@@ -60,7 +60,6 @@ const App = () => {
   const location = useLocation();
   
   useEffect(() => {
-    axios.defaults.baseURL = API_BASE;
     const ensureGoogleMeta = async () => {
       try {
         const { data } = await axios.get("/api/platform/payment-details");
