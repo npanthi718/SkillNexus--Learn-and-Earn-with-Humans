@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Dark mode (default) */
+html.dark body,
+body {
+  @apply font-inter bg-nexus-900 text-white;
+  background-image: radial-gradient(circle at top, rgba(148, 163, 255, 0.16), transparent 55%),
+    radial-gradient(circle at bottom, rgba(236, 72, 153, 0.14), transparent 55%);
+}
+
+/* Light mode - improved visibility and attractiveness */
+html.light body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+  color: #0f172a;
+}
+html.light body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+html.dark .glass-card {
+  @apply bg-white/5 border-white/10;
+}
+html.light .glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  color: #0f172a;
+}
+.glass-card {
+  @apply backdrop-blur-xl rounded-2xl border;
+}
+
+html.dark .glass-button {
+  @apply hover:border-white/40 hover:bg-white/10;
+}
+html.light .glass-button {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: white;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+html.light .glass-button:hover {
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+.glass-button {
+  @apply glass-card px-4 py-2 flex items-center justify-center gap-2 transition;
+}
+
+/* Light mode - text and inputs */
+html.light input,
+html.light select,
+html.light textarea {
+  background: rgba(241, 245, 249, 0.9) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+  color: #0f172a !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Modal overlay and content - theme aware */
+.modal-overlay {
+  @apply bg-black/70;
+}
+html.light .modal-overlay {
+  background: rgba(15, 23, 42, 0.5);
+}
+.modal-content {
+  @apply glass-card;
+}
+html.light .modal-content {
+  background: white;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  color: #0f172a;
+}
+
+/* Theme-aware text utilities */
+.theme-muted {
+  color: rgba(255, 255, 255, 0.65);
+}
+html.light .theme-muted {
+  color: #64748b;
+}
+.theme-primary {
+  @apply text-white;
+}
+html.light .theme-primary {
+  color: #0f172a;
+}
+.theme-accent {
+  @apply text-amber-200;
+}
+html.light .theme-accent {
+  color: #b45309;
+}
+
+/* Light mode - tables and cards */
+html.light table th,
+html.light table td {
+  color: #334155;
+  border-color: rgba(148, 163, 184, 0.3);
+}
+html.light .rounded-lg.border.border-white\/10,
+html.light .rounded-lg.border.border-amber-500\/30 {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(148, 163, 184, 0.4) !important;
+}
+
+/* Admin main area - light mode */
+html.light thead.bg-nexus-900\/95 {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #64748b !important;
+}
+html.light .bg-black\/20,
+html.light .bg-black\/40 {
+  background: rgba(241, 245, 249, 0.9) !important;
+}
+
+/* Theme-aware status badges - use in components */
+.status-paid { @apply rounded-full px-2 py-0.5 text-[10px] bg-emerald-500/20 text-emerald-200; }
+.status-pending { @apply rounded-full px-2 py-0.5 text-[10px] bg-amber-500/20 text-amber-200; }
+.status-reverted { @apply rounded-full px-2 py-0.5 text-[10px] bg-slate-500/20 text-slate-200; }
+.status-complaint { @apply rounded-full px-2 py-0.5 text-[10px] bg-red-500/20 text-red-200; }
+html.light .status-paid { background: rgba(16, 185, 129, 0.15); color: #047857; }
+html.light .status-pending { background: rgba(245, 158, 11, 0.2); color: #b45309; }
+html.light .status-reverted { background: rgba(100, 116, 139, 0.15); color: #475569; }
+html.light .status-complaint { background: rgba(239, 68, 68, 0.15); color: #b91c1c; }
+
+/* Table row hover - light mode */
+html.light tr.hover\:bg-white\/5:hover {
+  background: rgba(241, 245, 249, 0.9) !important;
+}
+
+/* Teacher payout box - light mode */
+html.light .bg-amber-500\/10 { background: rgba(245, 158, 11, 0.12) !important; }
+html.light .border-amber-500\/30 { border-color: rgba(245, 158, 11, 0.4) !important; }
+html.light .text-white\/60, html.light .text-white\/70 { color: #64748b !important; }
+
+/* Profile/glass cards - light mode polish */
+html.light .border-white\/10 { border-color: rgba(148, 163, 184, 0.35) !important; }
+html.light .border-white\/5 { border-color: rgba(148, 163, 184, 0.25) !important; }
+html.light .border-white\/20 { border-color: rgba(148, 163, 184, 0.4) !important; }
+
+/* Avatar - light mode border */
+html.light .avatar { border-color: rgba(148, 163, 184, 0.5) !important; }
+
+/* Ensure good contrast for accent text in light mode */
+html.light .text-amber-200, html.light .text-yellow-200 { color: #b45309 !important; }
+html.light .text-emerald-200, html.light .text-emerald-300, html.light .text-emerald-400 { color: #047857 !important; }
+html.light .text-nexus-200 { color: #4f46e5 !important; }
+html.light .text-white\/80, html.light .text-white\/90 { color: #334155 !important; }
+
+/* Light mode - ensure all main content has dark text */
+html.light main, html.light .glass-card * { color: inherit; }
+html.light h1, html.light h2, html.light h3, html.light h4 { color: #0f172a !important; }
+
+.chat-scroll {
+  scrollbar-width: thin;
+}
+
+.chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 255, 0.6);
+  border-radius: 999px;
+}
+
+/* Base font size - improve readability */
+html {
+  font-size: 16px;
+}
+
