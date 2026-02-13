@@ -20,10 +20,22 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
-const ORIGIN = process.env.FRONTEND_ORIGIN
-  ? process.env.FRONTEND_ORIGIN.split(",").map((s) => s.trim())
-  : "*";
-app.use(cors({ origin: ORIGIN, credentials: true }));
+const allowedOrigins = (process.env.FRONTEND_ORIGIN || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.length === 0) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("Not allowed by CORS"));
+    },
+    credentials: allowedOrigins.length > 0
+  })
+);
 app.use(express.json());
 
 // Health check
