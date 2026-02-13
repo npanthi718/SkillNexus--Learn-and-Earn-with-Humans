@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:24px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .window { fill:#0b1020; stroke:#334155; stroke-width:2; rx:18; }
+      .bar { fill:#111827; rx:18; }
+      .chip { fill:#22d3ee; opacity:0.15; stroke:#38bdf8; stroke-width:1.5; rx:10; }
+      .bubbleL { fill:#1f2937; stroke:#334155; stroke-width:1.5; rx:14; }
+      .bubbleR { fill:#7c3aed; rx:14; }
+      .text { fill:#cbd5e1; font-size:16px; font-family:Inter,Segoe UI,Arial; }
+      .muted { fill:#9ca3af; font-size:12px; font-family:Inter,Segoe UI,Arial; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1400" height="900" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">Group Chat · Session: IELTS</text>
+  <rect x="40" y="80" width="1320" height="760" class="window"/>
+  <rect x="40" y="80" width="1320" height="70" class="bar"/>
+  <text x="60" y="125" class="title">Members</text>
+  <rect x="60" y="140" width="900" height="36" class="chip"/>
+  <text x="70" y="165" class="muted">Learner · Teacher · Alice · Bob · Carol</text>
+
+  <rect x="60" y="200" width="1280" height="560" fill="#0b1020" stroke="#334155" stroke-width="1.5" rx="16"/>
+  <rect x="80" y="220" width="600" height="80" class="bubbleL"/>
+  <text x="100" y="245" class="text">Alice</text>
+  <text x="100" y="270" class="muted">Hello! Let’s start at 6pm</text>
+
+  <rect x="700" y="320" width="600" height="80" class="bubbleR"/>
+  <text x="720" y="345" class="text">Me</text>
+  <text x="720" y="370" class="muted">Shared notes and materials</text>
+
+  <rect x="80" y="420" width="620" height="80" class="bubbleL"/>
+  <text x="100" y="445" class="text">Bob</text>
+  <text x="100" y="470" class="muted">Got it, see you all</text>
+
+  <rect x="60" y="780" width="1280" height="40" class="chip"/>
+  <text x="70" y="805" class="muted">Compose message…</text>
+</svg>

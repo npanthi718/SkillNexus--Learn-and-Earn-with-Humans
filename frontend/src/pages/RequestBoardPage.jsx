@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 import { formatAmount } from "../utils/currency.js";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 
 const RequestBoardPage = ({ onRequireAuth }) => {
   const { theme } = useTheme();

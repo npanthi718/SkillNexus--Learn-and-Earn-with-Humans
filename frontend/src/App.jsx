@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx";
-import AdminNavbar from "./components/AdminNavbar.jsx";
+import Navbar from "./components/shared/Navbar.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
@@ -19,10 +18,11 @@ import ProfileEditPage from "./pages/ProfileEditPage.jsx";
 import ConversationsPage from "./pages/ConversationsPage.jsx";
 import GroupChatPage from "./pages/GroupChatPage.jsx";
 import LegalPage from "./pages/LegalPage.jsx";
-import Footer from "./components/Footer.jsx";
-import AuthModal from "./components/AuthModal.jsx";
-import { ToastProvider } from "./components/Toast.jsx";
+import Footer from "./components/shared/Footer.jsx";
+import AuthModal from "./components/shared/AuthModal.jsx";
+import { ToastProvider } from "./components/shared/Toast.jsx";
 import { ThemeProvider } from "./contexts/ThemeContext.jsx";
+import { API_BASE } from "./config/constants.js";
 
 const AppContent = ({ requireAuth }) => {
   const location = useLocation();
@@ -60,6 +60,7 @@ const App = () => {
   const location = useLocation();
   
   useEffect(() => {
+    axios.defaults.baseURL = API_BASE;
     const ensureGoogleMeta = async () => {
       try {
         const { data } = await axios.get("/api/platform/payment-details");

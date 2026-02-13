@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 
 const GroupChatPage = () => {
   const { groupId } = useParams();

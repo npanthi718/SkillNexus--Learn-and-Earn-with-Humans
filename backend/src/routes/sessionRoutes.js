@@ -214,25 +214,28 @@ router.post("/:id/accept", authRequired, async (req, res) => {
     }
     await session.save();
 
-    const members = [
-      session.learnerId,
-      req.user._id,
-      ...(session.groupMembers || []).map((m) => m.userId).filter(Boolean)
-    ].filter(Boolean);
-    const uniqueMembers = Array.from(new Set(members.map((id) => id.toString()))).map((id) => new mongoose.Types.ObjectId(id));
-    const slug = `session-${session._id}`;
-    let chat = await GroupChat.findOne({ slug });
-    if (!chat) {
-      chat = await GroupChat.create({
-        name: session.skillName,
-        slug,
-        sessionId: session._id,
-        createdBy: req.user._id,
-        members: uniqueMembers
-      });
-    } else {
-      chat.members = uniqueMembers;
-      await chat.save();
+    let chat = null;
+    if ((session.groupMembers || []).length > 0) {
+      const members = [
+        session.learnerId,
+        req.user._id,
+        ...(session.groupMembers || []).map((m) => m.userId).filter(Boolean)
+      ].filter(Boolean);
+      const uniqueMembers = Array.from(new Set(members.map((id) => id.toString()))).map((id) => new mongoose.Types.ObjectId(id));
+      const slug = `session-${session._id}`;
+      chat = await GroupChat.findOne({ slug });
+      if (!chat) {
+        chat = await GroupChat.create({
+          name: session.skillName,
+          slug,
+          sessionId: session._id,
+          createdBy: req.user._id,
+          members: uniqueMembers
+        });
+      } else {
+        chat.members = uniqueMembers;
+        await chat.save();
+      }
     }
 
     await createNotification({
@@ -240,7 +243,7 @@ router.post("/:id/accept", authRequired, async (req, res) => {
       type: "request_accepted",
       title: "Request accepted",
       body: `${req.user.name} accepted your "${session.skillName}" request`,
-      link: `/group/${chat._id}`,
+      link: chat ? `/group/${chat._id}` : "/dashboard",
       relatedId: session._id,
       relatedModel: "Session"
     });
@@ -252,10 +255,63 @@ router.post("/:id/accept", authRequired, async (req, res) => {
         type: "request_accepted",
         title: "Group request accepted",
         body: `A teacher accepted the group session "${session.skillName}". Open the group chat.`,
-        link: `/group/${chat._id}`,
+        link: chat ? `/group/${chat._id}` : "/dashboard",
         relatedId: session._id,
         relatedModel: "Session"
       });
+    }
+
+    // If this is a free session, auto-record a zero transaction and mark paid to teacher
+    if (session.isFree || !(session.budget > 0)) {
+      try {
+        const existingTx = await Transaction.findOne({ sessionId: session._id });
+        if (!existingTx) {
+          let config = await PlatformConfig.findOne();
+          if (!config) config = await PlatformConfig.create({ platformFeePercent: 10 });
+          const ccMap = {};
+          for (const m of (config.countryCurrency || [])) {
+            if (m.countryCode && m.currencyCode) ccMap[m.countryCode.toUpperCase()] = m.currencyCode.toUpperCase();
+          }
+          const toCode = (value) => {
+            const v = String(value || "").toUpperCase();
+            if (!v) return "";
+            if (ccMap[v]) return v;
+            const match = (config.countries || []).find((c) => String(c.name || "").toUpperCase() === v);
+            return match?.code?.toUpperCase() || "";
+          };
+          const payerCurrency = session.budgetCurrency || ccMap[toCode(session.learnerId?.country)] || "USD";
+          let payoutCurrency = ccMap[toCode(req.user.country)] || "USD";
+          try {
+            const teacher = await User.findById(session.teacherId).select("country paymentDetails");
+            const teacherCountry = toCode(teacher?.country || teacher?.paymentDetails?.[0]?.country || "");
+            if (teacherCountry && ccMap[teacherCountry]) {
+              payoutCurrency = ccMap[teacherCountry];
+            }
+          } catch {}
+          await Transaction.create({
+            sessionId: session._id,
+            learnerId: session.learnerId,
+            teacherId: session.teacherId,
+            skillName: session.skillName,
+            amountPaid: 0,
+            platformFeePercent: 0,
+            platformFeeAmount: 0,
+            teacherAmount: 0,
+            payerCurrency,
+            payoutCurrency,
+            amountPaidNPR: 0,
+            platformFeeAmountNPR: 0,
+            teacherAmountNPR: 0,
+            nprToPayoutRate: 0,
+            exchangeRate: 0,
+            payoutAmount: 0,
+            status: "paid_to_teacher",
+            paidToTeacherAt: new Date()
+          });
+        }
+      } catch (e) {
+        console.warn("Auto zero-transaction error:", e?.message);
+      }
     }
 
     // Ensure the accepting user is treated as a teacher for this skill
@@ -425,11 +481,13 @@ router.post("/:id/complete", authRequired, async (req, res) => {
       return res.status(404).json({ message: "Session not found" });
     }
 
-    if (session.learnerId.toString() !== req.user._id.toString() && session.teacherId?.toString() !== req.user._id.toString()) {
+    const actorIsLearner = session.learnerId.toString() === req.user._id.toString();
+    const actorIsTeacher = session.teacherId?.toString() === req.user._id.toString();
+    const actorIsGroupMember = Array.isArray(session.groupMembers) && session.groupMembers.some((m) => String(m.userId) === String(req.user._id));
+    if (!actorIsLearner && !actorIsTeacher && !actorIsGroupMember) {
       return res.status(403).json({ message: "Not allowed to update this session" });
     }
 
-    const actorIsLearner = session.learnerId.toString() === req.user._id.toString();
     const requiresPayment = !session.isFree && (session.budget || 0) > 0;
   if (requiresPayment && session.paymentSplitMode === "equal") {
     const total = 1 + (Array.isArray(session.groupMembers) ? session.groupMembers.length : 0);
@@ -535,6 +593,11 @@ router.patch("/:id/pricing", authRequired, async (req, res) => {
     }
     if (session.status !== "Accepted") {
       return res.status(400).json({ message: "Only accepted sessions can change pricing" });
+    }
+    const anyPayment = (Array.isArray(session.paidMemberIds) && session.paidMemberIds.length > 0) ||
+      await Transaction.exists({ sessionId: session._id });
+    if (anyPayment) {
+      return res.status(400).json({ message: "Pricing cannot be changed after payments have started" });
     }
     let changed = false;
     if (typeof isFree === "boolean") {

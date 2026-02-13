@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:22px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .node { fill:#0b1020; stroke:#334155; stroke-width:2; rx:16; }
+      .label { fill:#cbd5e1; font-size:15px; font-family:Inter,Segoe UI,Arial; }
+      .edge { stroke:#22d3ee; stroke-width:3; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="600" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">Deployment Diagram</text>
+
+  <rect x="60" y="120" width="300" height="170" class="node"/>
+  <text x="80" y="150" class="label">Client Browser</text>
+  <text x="80" y="175" class="label">React · Vite dev server</text>
+  <text x="80" y="200" class="label">Static build for production</text>
+
+  <rect x="400" y="120" width="300" height="170" class="node"/>
+  <text x="420" y="150" class="label">Backend (Node · Express)</text>
+  <text x="420" y="175" class="label">REST API · JWT</text>
+  <text x="420" y="200" class="label">Uploads → Cloudinary</text>
+
+  <rect x="740" y="120" width="300" height="170" class="node"/>
+  <text x="760" y="150" class="label">MongoDB Atlas</text>
+  <text x="760" y="175" class="label">Mongoose models</text>
+
+  <rect x="400" y="330" width="300" height="180" class="node"/>
+  <text x="420" y="360" class="label">Cloudinary</text>
+  <text x="420" y="385" class="label">Profile · QR · bank docs</text>
+
+  <line x1="360" y1="205" x2="400" y2="205" class="edge"/>
+  <line x1="700" y1="205" x2="740" y2="205" class="edge"/>
+  <line x1="550" y1="290" x2="550" y2="330" class="edge"/>
+</svg>

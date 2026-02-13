@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:24px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .window { fill:#0b1020; stroke:#334155; stroke-width:2; rx:18; }
+      .bar { fill:#111827; rx:18; }
+      .card { fill:#111827; stroke:#334155; stroke-width:1.5; rx:16; }
+      .label { fill:#cbd5e1; font-size:16px; font-family:Inter,Segoe UI,Arial; }
+      .text { fill:#9ca3af; font-size:14px; font-family:Inter,Segoe UI,Arial; }
+      .btn { fill:#7c3aed; rx:12; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1400" height="900" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">Request Board · Learners</text>
+  <rect x="40" y="80" width="1320" height="760" class="window"/>
+  <rect x="40" y="80" width="1320" height="70" class="bar"/>
+  <text x="60" y="125" class="title">Browse Requests</text>
+
+  <rect x="60" y="170" width="410" height="160" class="card"/>
+  <text x="80" y="200" class="label">Spoken English</text>
+  <text x="80" y="230" class="text">Budget: INR 300 · Weekends</text>
+  <rect x="80" y="250" width="180" height="40" class="btn"/><text x="95" y="277" class="label">Post offer</text>
+
+  <rect x="500" y="170" width="410" height="160" class="card"/>
+  <text x="520" y="200" class="label">Python Basics</text>
+  <text x="520" y="230" class="text">Budget: NPR · Online</text>
+  <rect x="520" y="250" width="220" height="40" class="btn"/><text x="535" y="277" class="label">Post offer</text>
+
+  <rect x="940" y="170" width="420" height="160" class="card"/>
+  <text x="960" y="200" class="label">Filters</text>
+  <text x="960" y="230" class="text">Country · Currency · Mode</text>
+
+  <rect x="60" y="360" width="1300" height="200" class="card"/>
+  <text x="80" y="390" class="label">Teacher offer creation</text>
+  <text x="80" y="420" class="text">Price in teacher currency · Learner preview (NPR-first)</text>
+  <text x="80" y="450" class="text">Auto conversion on acceptance</text>
+</svg>

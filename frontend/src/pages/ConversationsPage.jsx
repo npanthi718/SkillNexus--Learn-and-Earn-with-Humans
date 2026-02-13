@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 
 const ConversationsPage = () => {
@@ -108,8 +108,25 @@ const ConversationsPage = () => {
           <ul className="divide-y divide-white/10">
             {groupParticipants.map((g) => (
               <li key={g.id} className="px-2 py-2">
-                <p className="text-sm font-medium">{g.title}</p>
+                <p className="text-sm font-medium">Group chat</p>
                 <p className="text-[11px] theme-muted">Participants: {g.members.join(", ")}</p>
+                <div className="mt-1">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        const { data } = await axios.post(`/api/group-chats/session/${g.id}/create`, {}, { headers: { Authorization: `Bearer ${token}` } });
+                        const chatId = data.chat?._id || data.chat?.id;
+                        if (chatId) navigate(`/group/${chatId}`);
+                      } catch (err) {
+                        console.error("Open group chat error", err);
+                      }
+                    }}
+                    className={`rounded border px-2 py-0.5 text-[11px] ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 text-white/80 hover:bg-white/10"}`}
+                  >
+                    Open group chat
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

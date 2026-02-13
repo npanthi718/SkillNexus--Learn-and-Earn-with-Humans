@@ -10,6 +10,10 @@
 
 Node.js + Express API powering SkillNexus: authentication, sessions, group chat, payments, and an NPR-centric currency pipeline for transparent payouts.
 
+<p>
+  <img src="../docs/assets/architecture.svg" alt="Architecture" />
+</p>
+
 ## ⚙️ Stack
 - Express 4, Node.js 18+
 - MongoDB + Mongoose
@@ -36,6 +40,10 @@ For every paid session:
 2) USD → NPR using sell rate
 3) Deduct platform fee from NPR
 4) NPR → teacher currency using buy(NPR)/sell(teacher)
+
+<p>
+  <img src="../docs/assets/npr-pipeline.svg" alt="NPR-first pipeline" />
+</p>
 
 Stored on each Transaction:
 - amountPaid (payer currency)
@@ -80,6 +88,37 @@ Server: http://localhost:5000/
 npm run start
 ```
 Ensure environment variables and MongoDB are set.
+
+---
+
+## 🔎 API Overview (high-level)
+- Auth: signup, login, me, toggle teacher mode
+- Sessions: create request, create offer, accept, mark payment, complete
+- Group Chats: create per accepted group session, send/edit messages
+- Transactions: learner/teacher wallet views, complaint flow
+- Admin: list transactions, payouts, complaints, currency config, payment details
+- Platform: manage country→currency and buy/sell rates; bank/QR details
+- Uploads: images and files routed to Cloudinary
+
+## 🧩 Data Model Highlights
+- Transaction holds both payer view and NPR breakdown:
+  - amountPaid, amountPaidNPR
+  - platformFeeAmountNPR, teacherAmountNPR
+  - nprToPayoutRate, payoutAmount
+- Session tracks group members, split mode, and payment status per member
+- GroupChat links sessions and members with message metadata
+
+## 🧰 Admin Operations
+- Configure currency rates (buy/sell to USD)
+- Map countries to default currency codes
+- Add payout methods (bank details, QR)
+- Review and resolve complaints
+- Trigger payouts using NPR→payout currency rate
+
+## 🧪 Health & Security
+- Helmet/CORS configured via Express (CORS enabled)
+- JWT with strong secret from environment
+- Input validation at route layer; errors surfaced with consistent messages
 
 ## 👤 Owner · Contact
 **Sushil Panthi**

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 import { formatAmount } from "../utils/currency.js";
-import { useToast } from "../components/Toast.jsx";
+import { useToast } from "../components/shared/Toast.jsx";
 
 const TeachOffersPage = ({ onRequireAuth }) => {
   const { theme } = useTheme();

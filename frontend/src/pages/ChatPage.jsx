@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { useToast } from "../components/Toast.jsx";
+import { useToast } from "../components/shared/Toast.jsx";
 import { useTheme } from "../contexts/ThemeContext.jsx";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 
 const quickReplies = [
   "Hi! Thanks for reaching out. How can I help?",

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="720" viewBox="0 0 1100 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:22px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .text { fill:#cbd5e1; font-size:15px; font-family:Inter,Segoe UI,Arial; }
+      .window { fill:#0b1020; stroke:#334155; stroke-width:2; rx:16; }
+      .header { fill:#111827; rx:16; }
+      .chip { fill:#22d3ee; opacity:0.15; stroke:#38bdf8; stroke-width:1.5; rx:10; }
+      .stat { fill:#111827; stroke:#334155; stroke-width:1.5; rx:10; }
+      .accent { fill:#7c3aed; }
+      .success { fill:#10b981; }
+      .muted { fill:#9ca3af; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="720" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">UI Overview (Mock Screens)</text>
+  <text x="40" y="88" class="text">Stylized representations of key screens: Dashboard, Admin, Group Chat</text>
+
+  <rect x="60" y="120" width="300" height="520" class="window"/>
+  <rect x="60" y="120" width="300" height="60" class="header"/>
+  <text x="80" y="155" class="title">Dashboard</text>
+  <rect x="80" y="200" width="260" height="60" class="stat"/>
+  <text x="95" y="235" class="text">Requests · Offers · Wallet</text>
+  <rect x="80" y="280" width="260" height="140" class="stat"/>
+  <text x="95" y="310" class="text">Pay now (split)</text>
+  <text x="95" y="335" class="text">Unpaid participants: 2</text>
+  <rect x="95" y="360" width="120" height="28" class="chip"/>
+  <text x="105" y="380" class="text">View payment</text>
+  <rect x="80" y="440" width="260" height="180" class="stat"/>
+  <text x="95" y="470" class="text">Messages</text>
+  <text x="95" y="495" class="text">Group chat opens on accept</text>
+
+  <rect x="400" y="120" width="300" height="520" class="window"/>
+  <rect x="400" y="120" width="300" height="60" class="header"/>
+  <text x="420" y="155" class="title">Admin</text>
+  <text x="420" y="185" class="text">NPR-first cards with dual labels</text>
+  <rect x="420" y="210" width="260" height="80" class="stat"/>
+  <text x="435" y="240" class="text">Total received</text>
+  <text x="435" y="260" class="accent">NPR 12,345</text>
+  <text x="555" y="260" class="muted">USD 98.76</text>
+  <rect x="420" y="310" width="260" height="80" class="stat"/>
+  <text x="435" y="340" class="text">Platform fees</text>
+  <text x="435" y="360" class="accent">NPR 1,234</text>
+  <text x="555" y="360" class="muted">USD 9.87</text>
+  <rect x="420" y="410" width="260" height="80" class="stat"/>
+  <text x="435" y="440" class="text">Paid to teachers</text>
+  <text x="435" y="460" class="success">NPR 11,111</text>
+  <text x="555" y="460" class="muted">USD 88.89</text>
+  <rect x="420" y="510" width="260" height="100" class="stat"/>
+  <text x="435" y="540" class="text">Payouts · Complaints · Rates</text>
+
+  <rect x="740" y="120" width="300" height="520" class="window"/>
+  <rect x="740" y="120" width="300" height="60" class="header"/>
+  <text x="760" y="155" class="title">Group Chat</text>
+  <rect x="760" y="200" width="260" height="40" class="chip"/>
+  <text x="770" y="225" class="text">Members: learner · teacher · 3 friends</text>
+  <rect x="760" y="260" width="260" height="320" class="stat"/>
+  <text x="775" y="290" class="text">Sender: Alice — Hello!</text>
+  <text x="775" y="320" class="text">Sender: Bob — Let’s start at 6pm</text>
+  <text x="775" y="350" class="text">Sender: Me — Shared notes</text>
+  <rect x="760" y="590" width="260" height="50" class="chip"/>
+  <text x="770" y="620" class="text">Compose message…</text>
+</svg>

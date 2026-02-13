@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
 import { formatAmount } from "../utils/currency.js";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 
 const HomePage = ({ onRequireAuth }) => {
   const { theme } = useTheme();

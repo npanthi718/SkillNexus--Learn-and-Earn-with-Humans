@@ -10,6 +10,10 @@
 
 Modern React frontend for SkillNexus — a learning marketplace connecting learners and teachers with transparent multi-currency payments, group sessions, and rich messaging.
 
+<p>
+  <img src="../docs/assets/ui-overview.svg" alt="UI Overview" />
+</p>
+
 ## 🚀 Stack
 - React 18 + Vite 5
 - TailwindCSS 3
@@ -75,6 +79,40 @@ npm run preview
 - Group chat becomes available only after a session is accepted
 - “Pay now” shows per group split and payment status
 - Admin modal shows NPR-centric conversion and teacher payout
+
+---
+
+## 🧭 Getting Started (UI)
+```bash
+npm install
+npm run dev    # http://localhost:5173
+```
+
+Configure backend proxy:
+```bash
+# PowerShell
+$env:VITE_API_PORT=5000
+```
+
+## 🧱 Build & Preview
+```bash
+npm run build
+npm run preview
+```
+
+## 🎨 Design Principles
+- Clean, glassmorphism-inspired UI
+- Clear currency labels (NPR-first) with dual display on admin cards
+- Minimal friction for “Pay now” and wallet review
+- Accessible components and responsive layout
+
+## 🔎 Notable Paths
+- src/pages/DashboardPage.jsx
+- src/pages/RequestBoardPage.jsx
+- src/pages/TeachOffersPage.jsx
+- src/pages/GroupChatPage.jsx
+- src/pages/AdminPage.jsx
+- src/utils/currency.js
 
 ## 👤 Owner · Contact
 **Sushil Panthi**

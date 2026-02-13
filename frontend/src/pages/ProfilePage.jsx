@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import ChatButton from "../components/ChatButton.jsx";
-import BookButton from "../components/BookButton.jsx";
+import ChatButton from "../components/shared/ChatButton.jsx";
+import BookButton from "../components/shared/BookButton.jsx";
 import { formatAmount } from "../utils/currency.js";
-import Avatar from "../components/Avatar.jsx";
-import { useToast } from "../components/Toast.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
+import { useToast } from "../components/shared/Toast.jsx";
  
 const ProfileFriendActions = ({ userId }) => {
   const [status, setStatus] = useState("none");

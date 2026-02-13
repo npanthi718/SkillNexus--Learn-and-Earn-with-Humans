@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:22px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .class { fill:#0b1020; stroke:#334155; stroke-width:2; rx:12; }
+      .section { fill:#111827; rx:12; }
+      .hdr { fill:#e5e7eb; font-size:16px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .text { fill:#cbd5e1; font-size:14px; font-family:Inter,Segoe UI,Arial; }
+      .rel { stroke:#7c3aed; stroke-width:2.5; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="600" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">UML Class Diagram</text>
+
+  <rect x="60" y="100" width="260" height="220" class="class"/>
+  <rect x="60" y="100" width="260" height="40" class="section"/><text x="80" y="127" class="hdr">User</text>
+  <text x="80" y="160" class="text">+ _id: ObjectId</text>
+  <text x="80" y="180" class="text">+ name: string</text>
+  <text x="80" y="200" class="text">+ email: string</text>
+  <text x="80" y="220" class="text">+ country: string</text>
+  <text x="80" y="240" class="text">+ isTeacher: boolean</text>
+
+  <rect x="360" y="100" width="300" height="240" class="class"/>
+  <rect x="360" y="100" width="300" height="40" class="section"/><text x="380" y="127" class="hdr">Session</text>
+  <text x="380" y="160" class="text">+ _id: ObjectId</text>
+  <text x="380" y="180" class="text">+ skillName: string</text>
+  <text x="380" y="200" class="text">+ learnerId: ObjectId</text>
+  <text x="380" y="220" class="text">+ teacherId: ObjectId</text>
+  <text x="380" y="240" class="text">+ groupMembers: User[]</text>
+  <text x="380" y="260" class="text">+ paymentSplitMode: string</text>
+
+  <rect x="720" y="100" width="300" height="240" class="class"/>
+  <rect x="720" y="100" width="300" height="40" class="section"/><text x="740" y="127" class="hdr">Transaction</text>
+  <text x="740" y="160" class="text">+ _id: ObjectId</text>
+  <text x="740" y="180" class="text">+ sessionId: ObjectId</text>
+  <text x="740" y="200" class="text">+ amountPaid: number</text>
+  <text x="740" y="220" class="text">+ amountPaidNPR: number</text>
+  <text x="740" y="240" class="text">+ feeNPR: number</text>
+  <text x="740" y="260" class="text">+ teacherAmountNPR: number</text>
+
+  <line x1="190" y1="220" x2="360" y2="220" class="rel"/>
+  <line x1="510" y1="220" x2="720" y2="220" class="rel"/>
+</svg>

@@ -20,7 +20,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
-app.use(cors({ origin: "*", credentials: true }));
+const ORIGIN = process.env.FRONTEND_ORIGIN
+  ? process.env.FRONTEND_ORIGIN.split(",").map((s) => s.trim())
+  : "*";
+app.use(cors({ origin: ORIGIN, credentials: true }));
 app.use(express.json());
 
 // Health check

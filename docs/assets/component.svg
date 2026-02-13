@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:22px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .comp { fill:#0b1020; stroke:#334155; stroke-width:2; rx:16; }
+      .label { fill:#cbd5e1; font-size:15px; font-family:Inter,Segoe UI,Arial; }
+      .edge { stroke:#7c3aed; stroke-width:2.5; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="600" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">Component Diagram</text>
+
+  <rect x="60" y="110" width="260" height="140" class="comp"/><text x="80" y="140" class="label">Auth</text><text x="80" y="165" class="label">Signup · Login · Me</text>
+  <rect x="60" y="280" width="260" height="140" class="comp"/><text x="80" y="310" class="label">Sessions</text><text x="80" y="335" class="label">Requests · Offers · Accept</text>
+  <rect x="380" y="110" width="300" height="140" class="comp"/><text x="400" y="140" class="label">Transactions</text><text x="400" y="165" class="label">Wallet · NPR breakdown</text>
+  <rect x="380" y="280" width="300" height="140" class="comp"/><text x="400" y="310" class="label">GroupChats</text><text x="400" y="335" class="label">Members · Messages</text>
+  <rect x="740" y="110" width="300" height="140" class="comp"/><text x="760" y="140" class="label">Admin</text><text x="760" y="165" class="label">Rates · Payouts · Complaints</text>
+  <rect x="740" y="280" width="300" height="140" class="comp"/><text x="760" y="310" class="label">PlatformConfig</text><text x="760" y="335" class="label">Country→Currency · Buy/Sell</text>
+
+  <line x1="320" y1="180" x2="380" y2="180" class="edge"/>
+  <line x1="320" y1="350" x2="380" y2="350" class="edge"/>
+  <line x1="680" y1="180" x2="740" y2="180" class="edge"/>
+  <line x1="680" y1="350" x2="740" y2="350" class="edge"/>
+</svg>

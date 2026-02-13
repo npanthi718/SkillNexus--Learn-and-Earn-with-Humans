@@ -481,14 +481,37 @@ router.get("/expenditures", async (req, res) => {
 });
 
 router.post("/expenditures", async (req, res) => {
-  const { amount, category, description, date, tags, attachments } = req.body;
+  const { amount, category, description, date, tags, attachments } = req.body || {};
+  const numAmount = Number(amount);
+  const cat = typeof category === "string" ? category.trim() : "other";
+  const desc = typeof description === "string" ? description.trim() : "";
+  const tagList = Array.isArray(tags) ? tags.map((t) => String(t).trim()).filter(Boolean) : [];
+  const attList = Array.isArray(attachments) ? attachments.map((u) => String(u).trim()).filter(Boolean) : [];
+  const isValidUrl = (s) => {
+    try {
+      const u = new URL(s);
+      return !!u.protocol && !!u.host;
+    } catch {
+      return false;
+    }
+  };
+  if (!Number.isFinite(numAmount) || numAmount < 0) {
+    return res.status(400).json({ message: "Amount must be a non-negative number" });
+  }
+  if (cat.length > 64) {
+    return res.status(400).json({ message: "Category too long" });
+  }
+  if (desc.length > 500) {
+    return res.status(400).json({ message: "Description too long" });
+  }
+  const safeAttachments = attList.filter(isValidUrl).slice(0, 10);
   const exp = await PlatformExpenditure.create({
-    amount: Number(amount) || 0,
-    category: category || "other",
-    description: description || "",
+    amount: Math.round(numAmount * 100) / 100,
+    category: cat || "other",
+    description: desc || "",
     date: date ? new Date(date) : new Date(),
-    tags: Array.isArray(tags) ? tags.filter(Boolean) : [],
-    attachments: Array.isArray(attachments) ? attachments.filter(Boolean) : []
+    tags: tagList,
+    attachments: safeAttachments
   });
   return res.status(201).json(exp);
 });
@@ -496,12 +519,32 @@ router.post("/expenditures", async (req, res) => {
 router.put("/expenditures/:id", async (req, res) => {
   const updates = {};
   const b = req.body || {};
-  if (typeof b.amount !== "undefined") updates.amount = Number(b.amount) || 0;
-  if (typeof b.category === "string") updates.category = b.category || "other";
-  if (typeof b.description === "string") updates.description = b.description || "";
+  const isValidUrl = (s) => {
+    try {
+      const u = new URL(s);
+      return !!u.protocol && !!u.host;
+    } catch {
+      return false;
+    }
+  };
+  if (typeof b.amount !== "undefined") {
+    const numAmount = Number(b.amount);
+    if (!Number.isFinite(numAmount) || numAmount < 0) {
+      return res.status(400).json({ message: "Amount must be a non-negative number" });
+    }
+    updates.amount = Math.round(numAmount * 100) / 100;
+  }
+  if (typeof b.category === "string") {
+    if (b.category.trim().length > 64) return res.status(400).json({ message: "Category too long" });
+    updates.category = b.category || "other";
+  }
+  if (typeof b.description === "string") {
+    if (b.description.trim().length > 500) return res.status(400).json({ message: "Description too long" });
+    updates.description = b.description || "";
+  }
   if (b.date) updates.date = new Date(b.date);
-  if (Array.isArray(b.tags)) updates.tags = b.tags.filter(Boolean);
-  if (Array.isArray(b.attachments)) updates.attachments = b.attachments.filter(Boolean);
+  if (Array.isArray(b.tags)) updates.tags = b.tags.map((t) => String(t).trim()).filter(Boolean);
+  if (Array.isArray(b.attachments)) updates.attachments = b.attachments.map((u) => String(u).trim()).filter(isValidUrl).slice(0, 10);
   const exp = await PlatformExpenditure.findByIdAndUpdate(req.params.id, updates, { new: true });
   if (!exp) return res.status(404).json({ message: "Not found" });
   return res.json(exp);

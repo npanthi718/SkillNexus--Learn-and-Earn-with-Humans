@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
 import { formatAmount } from "../utils/currency.js";
+import VisibilityMount from "../components/shared/VisibilityMount.jsx";
+import Loader from "../components/shared/Loader.jsx";
+import ChatButton from "../components/shared/ChatButton.jsx";
+import BookButton from "../components/shared/BookButton.jsx";
 
 function TeachersPage({ onRequireAuth }) {
   const { theme } = useTheme();
@@ -70,14 +74,6 @@ function TeachersPage({ onRequireAuth }) {
     }
   }, [location.search, teachers]);
 
-  const handleChat = (teacherId) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("sn_token") : null;
-    if (!token) {
-      onRequireAuth && onRequireAuth();
-    } else {
-      navigate(`/chat/${teacherId}`);
-    }
-  };
   const openBook = (teacher) => {
     const ok = onRequireAuth ? onRequireAuth() : true;
     if (!ok) return;
@@ -149,8 +145,9 @@ function TeachersPage({ onRequireAuth }) {
       ) : teachers.length === 0 ? (
         <p className={`text-sm ${isLight ? "text-slate-600" : "text-white/70"}`}>No teachers found yet.</p>
       ) : (
-        <section className="grid gap-4 text-xs sm:grid-cols-2 lg:grid-cols-3 sm:text-sm">
-          {teachers.map((t) => (
+        <VisibilityMount placeholder={<Loader size="xs" />}>
+          <section className="grid gap-4 text-xs sm:grid-cols-2 lg:grid-cols-3 sm:text-sm">
+            {teachers.map((t) => (
             <article key={t.id} className="glass-card flex flex-col justify-between p-4">
               <div>
                 <div className="flex items-center justify-between gap-2">
@@ -180,8 +177,8 @@ function TeachersPage({ onRequireAuth }) {
                 <p className={`mt-2 line-clamp-3 text-sm ${isLight ? "text-slate-600" : "text-white/70"}`}>{t.bio}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {(t.skillsToTeach || []).slice(0, 4).map((skill) => {
-                    const viewerCountry = currentUserCountry || t.country || "US";
-                    const teacherCountry = t.country || "US";
+                    const viewerCountry = currentUserCountry || t.country || "NP";
+                    const teacherCountry = t.country || "NP";
                     const amount = skill.price || 0;
                     return (
                     <span
@@ -211,27 +208,28 @@ function TeachersPage({ onRequireAuth }) {
                   View profile
                 </Link>
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleChat(t.id)}
-                    className="rounded-full border px-3 py-1 text-[11px] hover:bg-white/10"
-                  >
-                    Chat
-                  </button>
+                  <ChatButton
+                    otherUserId={t.id}
+                    requireAuth={() => {
+                      const token = typeof window !== "undefined" ? localStorage.getItem("sn_token") : null;
+                      if (!token) { onRequireAuth && onRequireAuth(); return false; }
+                      return true;
+                    }}
+                  />
                   {t.isVerified && (
-                    <button
-                      type="button"
+                    <BookButton
+                      teacherId={t.id}
+                      isVerified={true}
                       onClick={() => openBook(t)}
-                      className="glass-button bg-gradient-to-r from-nexus-500 to-purple-500 px-3 py-1 text-[11px] font-medium shadow-lg shadow-nexus-500/30"
-                    >
-                      Book
-                    </button>
+                      className="ml-1"
+                    />
                   )}
                 </div>
               </div>
             </article>
-          ))}
-        </section>
+            ))}
+          </section>
+        </VisibilityMount>
       )}
       {bookingFor && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">

@@ -5,7 +5,7 @@ const PlatformExpenditureSchema = new mongoose.Schema(
     amount: { type: Number, required: true, min: 0 },
     category: { type: String, default: "other" },
     description: { type: String, default: "" },
-    date: { type: Date, default: Date.now },
+    date: { type: Date, default: Date.now, index: true },
     tags: { type: [String], default: [] },
     attachments: { type: [String], default: [] }
   },

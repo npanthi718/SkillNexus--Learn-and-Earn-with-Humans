@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="420" viewBox="0 0 1100 420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:22px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .text { fill:#cbd5e1; font-size:15px; font-family:Inter,Segoe UI,Arial; }
+      .box { fill:#0b1020; stroke:#334155; stroke-width:2; rx:16; }
+      .arrow { stroke:url(#flow); stroke-width:5; marker-end:url(#arrowhead); }
+      .fee { fill:#f59e0b; font-weight:700; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="2" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1100" height="420" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">NPR-First Accounting Pipeline</text>
+  <text x="40" y="88" class="text">Transparent flow: payer currency → USD → NPR → fee deduction → NPR-to-payout</text>
+
+  <rect x="60" y="130" width="200" height="150" class="box"/>
+  <text x="80" y="160" class="title">Learner</text>
+  <text x="80" y="188" class="text">Pays in local</text>
+  <text x="80" y="212" class="text">currency (e.g. INR)</text>
+
+  <rect x="320" y="130" width="200" height="150" class="box"/>
+  <text x="340" y="160" class="title">USD</text>
+  <text x="340" y="188" class="text">Offer → USD</text>
+  <text x="340" y="212" class="text">using buy rate</text>
+
+  <rect x="580" y="130" width="220" height="150" class="box"/>
+  <text x="600" y="160" class="title">NPR</text>
+  <text x="600" y="188" class="text">USD → NPR using</text>
+  <text x="600" y="212" class="text">sell rate</text>
+  <text x="600" y="236" class="text fee">Deduct platform fee %</text>
+
+  <rect x="860" y="130" width="220" height="150" class="box"/>
+  <text x="880" y="160" class="title">Payout</text>
+  <text x="880" y="188" class="text">Net NPR → teacher</text>
+  <text x="880" y="212" class="text">currency using NPR→payout</text>
+
+  <line x1="260" y1="205" x2="320" y2="205" class="arrow"/>
+  <line x1="520" y1="205" x2="580" y2="205" class="arrow"/>
+  <line x1="800" y1="205" x2="860" y2="205" class="arrow"/>
+
+  <rect x="60" y="320" width="1020" height="60" class="box"/>
+  <text x="80" y="355" class="text">Transaction stores: amountPaid, amountPaidNPR, platformFeeAmountNPR, teacherAmountNPR, nprToPayoutRate, payoutAmount</text>
+</svg>

@@ -66,7 +66,7 @@ const UserSchema = new mongoose.Schema(
     ratings: { type: [Number], default: [] },
 
     // Home country for currency display (e.g. NP, US, IN)
-    country: { type: String, default: "", trim: true },
+    country: { type: String, default: "NP", trim: true },
 
     // Identity and trust
     isVerified: { type: Boolean, default: false },

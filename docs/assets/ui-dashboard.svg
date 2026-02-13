@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:24px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .window { fill:#0b1020; stroke:#334155; stroke-width:2; rx:18; }
+      .bar { fill:#111827; rx:18; }
+      .panel { fill:#111827; stroke:#334155; stroke-width:1.5; rx:16; }
+      .label { fill:#cbd5e1; font-size:16px; font-family:Inter,Segoe UI,Arial; }
+      .text { fill:#9ca3af; font-size:14px; font-family:Inter,Segoe UI,Arial; }
+      .btn { fill:#7c3aed; rx:12; }
+      .chip { fill:#22d3ee; opacity:0.15; stroke:#38bdf8; stroke-width:1.5; rx:10; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1400" height="900" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">Dashboard</text>
+  <rect x="40" y="80" width="1320" height="760" class="window"/>
+  <rect x="40" y="80" width="1320" height="70" class="bar"/>
+  <text x="60" y="125" class="title">Welcome, Learner</text>
+
+  <rect x="60" y="170" width="380" height="160" class="panel"/>
+  <text x="80" y="200" class="label">Requests</text>
+  <text x="80" y="230" class="text">Spoken English · Need weekend batch</text>
+  <text x="80" y="260" class="text">IELTS · Group of 4 · Budget NRP</text>
+
+  <rect x="460" y="170" width="380" height="160" class="panel"/>
+  <text x="480" y="200" class="label">Offers</text>
+  <text x="480" y="230" class="text">Teacher: Ram · INR 300 · 6pm</text>
+  <text x="480" y="260" class="text">Teacher: Mina · NPR rates · Online</text>
+
+  <rect x="860" y="170" width="500" height="160" class="panel"/>
+  <text x="880" y="200" class="label">Wallet</text>
+  <text x="880" y="230" class="text">Paid · Pending · Complaints</text>
+  <rect x="880" y="250" width="140" height="36" class="chip"/><text x="895" y="275" class="text">Paid: 3</text>
+  <rect x="1030" y="250" width="160" height="36" class="chip"/><text x="1045" y="275" class="text">Pending: 1</text>
+  <rect x="1200" y="250" width="160" height="36" class="chip"/><text x="1215" y="275" class="text">Complaints: 0</text>
+
+  <rect x="60" y="350" width="640" height="220" class="panel"/>
+  <text x="80" y="380" class="label">Group Session · IELTS</text>
+  <text x="80" y="410" class="text">Members: you + 3 friends</text>
+  <text x="80" y="440" class="text">Split: equal · Your share: NPR 1,000</text>
+  <rect x="80" y="460" width="160" height="40" class="btn"/><text x="95" y="487" class="label">Pay now</text>
+  <rect x="260" y="460" width="260" height="40" class="chip"/><text x="275" y="487" class="text">Unpaid participants: 1</text>
+
+  <rect x="720" y="350" width="640" height="220" class="panel"/>
+  <text x="740" y="380" class="label">Messages</text>
+  <text x="740" y="410" class="text">Group chat opens after acceptance</text>
+  <text x="740" y="440" class="text">Alice: Hello all! · Bob: See you at 6</text>
+
+  <rect x="60" y="590" width="1300" height="230" class="panel"/>
+  <text x="80" y="620" class="label">Company Payment Preview</text>
+  <text x="80" y="650" class="text">You pay (learner currency) · NPR conversion · Teacher receives (currency)</text>
+  <text x="80" y="680" class="text">No platform fee shown in learner view</text>
+</svg>

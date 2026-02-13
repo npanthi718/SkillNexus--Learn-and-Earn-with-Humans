@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext.jsx";
-import Avatar from "../components/Avatar.jsx";
+import Avatar from "../components/shared/Avatar.jsx";
+import VisibilityMount from "../components/shared/VisibilityMount.jsx";
+import Loader from "../components/shared/Loader.jsx";
 
 const UsersPage = () => {
   const { theme } = useTheme();
@@ -171,8 +173,9 @@ const UsersPage = () => {
       {loading ? (
         <p className={`text-sm ${isLight ? "text-slate-600" : "text-white/70"}`}>Loading users...</p>
       ) : viewTab === "friends" ? (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {friends.map((f) => (
+        <VisibilityMount placeholder={<Loader size="xs" />}>
+          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {friends.map((f) => (
             <article key={f.id} className="glass-card p-4 flex flex-col justify-between">
               <div className="flex items-center gap-3">
                 <Avatar src={f.profilePic} size="md" />
@@ -185,14 +188,16 @@ const UsersPage = () => {
                 <button type="button" onClick={() => navigate(`/chat/${f.id}`)} className="rounded-full border border-white/15 px-3 py-0.5 text-[11px] text-white/80 hover:bg-white/10">Chat</button>
               </div>
             </article>
-          ))}
-        </section>
+            ))}
+          </section>
+        </VisibilityMount>
       ) : viewTab === "requests" ? (
         friendRequests.length === 0 ? (
           <p className={`text-sm ${isLight ? "text-slate-600" : "text-white/70"}`}>No pending requests.</p>
         ) : (
-          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {friendRequests.map((r) => (
+          <VisibilityMount placeholder={<Loader size="xs" />}>
+            <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {friendRequests.map((r) => (
               <article key={r.fromUserId} className="glass-card p-4 flex flex-col justify-between">
                 <div className="flex items-center gap-3">
                   <Avatar src={r.profilePic} size="md" />
@@ -206,14 +211,16 @@ const UsersPage = () => {
                   <button type="button" onClick={() => navigate(`/profile/${r.fromUserId}`)} className="rounded-full border border-white/15 px-3 py-0.5 text-[11px] text-white/80 hover:bg-white/10">View</button>
                 </div>
               </article>
-            ))}
-          </section>
+              ))}
+            </section>
+          </VisibilityMount>
         )
       ) : users.length === 0 ? (
         <p className={`text-sm ${isLight ? "text-slate-600" : "text-white/70"}`}>No users found.</p>
       ) : (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(users || []).filter((u) => {
+        <VisibilityMount placeholder={<Loader size="xs" />}>
+          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {(users || []).filter((u) => {
             const isMe = me && String(me._id) === String(u.id);
             if (viewTab === "suggestions") {
               const st = getStatus(u.id);
@@ -265,7 +272,8 @@ const UsersPage = () => {
               </article>
             );
           })}
-        </section>
+          </section>
+        </VisibilityMount>
       )}
     </main>
   );

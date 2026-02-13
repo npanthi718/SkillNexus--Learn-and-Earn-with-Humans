@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="650" viewBox="0 0 1100 650">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <style>
+      .card { fill:#0b1020; stroke:#334155; stroke-width:2; rx:18; }
+      .title { fill:#e5e7eb; font-size:20px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .text { fill:#cbd5e1; font-size:15px; font-family:Inter,Segoe UI,Arial; }
+      .line { stroke:url(#accent); stroke-width:3; stroke-linecap:round; }
+      .pill { fill:#0ea5e9; opacity:0.15; stroke:#38bdf8; stroke-width:1.5; rx:10; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1100" height="650" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">SkillNexus Architecture</text>
+  <text x="40" y="90" class="text">React + Vite frontend · Node + Express backend · MongoDB · Cloudinary · NPR-first currency pipeline</text>
+
+  <rect x="60" y="130" width="420" height="180" class="card"/>
+  <text x="80" y="160" class="title">Frontend (React · Vite)</text>
+  <text x="80" y="188" class="text">- Tailwind UI · Router · Axios</text>
+  <text x="80" y="212" class="text">- Dashboard · Admin · Group Chat</text>
+  <text x="80" y="236" class="text">- Wallet (learner & teacher)</text>
+  <text x="80" y="260" class="text">- NPR-first display on admin cards</text>
+  <rect x="340" y="250" width="120" height="30" class="pill"/>
+  <text x="355" y="270" class="text">Vite Proxy /api</text>
+
+  <rect x="600" y="130" width="420" height="180" class="card"/>
+  <text x="620" y="160" class="title">Backend (Node · Express)</text>
+  <text x="620" y="188" class="text">- Auth · Sessions · Transactions</text>
+  <text x="620" y="212" class="text">- Group Chats · Complaints · Admin</text>
+  <text x="620" y="236" class="text">- Platform config (rates, mapping)</text>
+  <text x="620" y="260" class="text">- Cloudinary uploads</text>
+
+  <rect x="180" y="360" width="280" height="160" class="card"/>
+  <text x="200" y="390" class="title">MongoDB · Mongoose</text>
+  <text x="200" y="418" class="text">Collections:</text>
+  <text x="220" y="442" class="text">Users · Sessions · Transactions</text>
+  <text x="220" y="466" class="text">GroupChats · Complaints · Reviews</text>
+  <text x="220" y="490" class="text">PlatformConfig (rates & mapping)</text>
+
+  <rect x="620" y="360" width="280" height="160" class="card"/>
+  <text x="640" y="390" class="title">Cloudinary</text>
+  <text x="640" y="418" class="text">- Profile photos · QR · Bank docs</text>
+  <text x="640" y="442" class="text">- Teacher verification media</text>
+  <text x="640" y="466" class="text">- Secure uploads via API</text>
+
+  <path d="M480 220 L600 220" class="line"/>
+  <path d="M320 310 L320 360" class="line"/>
+  <path d="M720 310 L720 360" class="line"/>
+  <path d="M600 220 L480 220" class="line"/>
+
+  <rect x="360" y="540" width="380" height="70" class="card"/>
+  <text x="380" y="565" class="title">NPR-First Currency Pipeline</text>
+  <text x="380" y="590" class="text">Learner currency → USD → NPR (fee) → Teacher currency</text>
+</svg>

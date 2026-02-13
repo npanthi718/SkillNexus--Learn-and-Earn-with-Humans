@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#1e293b"/></linearGradient>
+    <style>
+      .title { fill:#e5e7eb; font-size:24px; font-weight:700; font-family:Inter,Segoe UI,Arial; }
+      .muted { fill:#94a3b8; font-size:14px; font-family:Inter,Segoe UI,Arial; }
+      .window { fill:#0b1020; stroke:#334155; stroke-width:2; rx:18; }
+      .bar { fill:#111827; rx:18; }
+      .card { fill:#111827; stroke:#334155; stroke-width:1.5; rx:16; }
+      .label { fill:#cbd5e1; font-size:16px; font-family:Inter,Segoe UI,Arial; }
+      .big { fill:#7c3aed; font-size:28px; font-weight:800; font-family:Inter,Segoe UI,Arial; }
+      .small { fill:#9ca3af; font-size:16px; font-family:Inter,Segoe UI,Arial; }
+      .table { fill:#0b1020; stroke:#334155; stroke-width:1.5; rx:12; }
+      .thead { fill:#111827; }
+      .cell { fill:#0f172a; }
+      .ok { fill:#10b981; }
+      .accent { fill:#eab308; }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1400" height="900" fill="url(#bg)"/>
+  <text x="40" y="60" class="title">Admin · Earnings & Expenditure</text>
+  <text x="40" y="90" class="muted">NPR-first accounting · Dual currency labels · Per-transaction NPR summary</text>
+
+  <rect x="40" y="120" width="1320" height="720" class="window"/>
+  <rect x="40" y="120" width="1320" height="70" class="bar"/>
+  <text x="60" y="165" class="title">Reporting Currency: USD</text>
+  <text x="350" y="165" class="muted">NPR is primary · Converted with USD rates</text>
+
+  <rect x="60" y="210" width="400" height="140" class="card"/>
+  <text x="80" y="240" class="label">Total received</text>
+  <text x="80" y="275" class="big">NPR 45,000</text>
+  <text x="260" y="275" class="small">USD 350.00</text>
+  <text x="80" y="305" class="muted">Sum of learner payments converted to NPR</text>
+
+  <rect x="480" y="210" width="400" height="140" class="card"/>
+  <text x="500" y="240" class="label">Platform fees</text>
+  <text x="500" y="275" class="big accent">NPR 4,500</text>
+  <text x="680" y="275" class="small">USD 35.00</text>
+  <text x="500" y="305" class="muted">Fee % applied to Received NPR</text>
+
+  <rect x="900" y="210" width="440" height="140" class="card"/>
+  <text x="920" y="240" class="label">Paid to teachers</text>
+  <text x="920" y="275" class="big ok">NPR 40,500</text>
+  <text x="1140" y="275" class="small">USD 315.00</text>
+  <text x="920" y="305" class="muted">Net NPR → teacher currency payout</text>
+
+  <rect x="60" y="370" width="1280" height="370" class="table"/>
+  <rect x="60" y="370" width="1280" height="48" class="thead"/>
+  <text x="80" y="400" class="label">Date</text>
+  <text x="220" y="400" class="label">Skill</text>
+  <text x="420" y="400" class="label">Learner</text>
+  <text x="620" y="400" class="label">Received NPR</text>
+  <text x="800" y="400" class="label">Fee NPR</text>
+  <text x="940" y="400" class="label">Net NPR</text>
+  <text x="1080" y="400" class="label">NPR→Payout</text>
+  <text x="1240" y="400" class="label">Payout</text>
+
+  <text x="80" y="440" class="small">2026-02-12 14:09</text>
+  <text x="220" y="440" class="small">Spoken English</text>
+  <text x="420" y="440" class="small">Alice</text>
+  <text x="620" y="440" class="small">NPR 4,000</text>
+  <text x="800" y="440" class="small">NPR 400</text>
+  <text x="940" y="440" class="small">NPR 3,600</text>
+  <text x="1080" y="440" class="small">1.25</text>
+  <text x="1240" y="440" class="small">USD 45.00</text>
+
+  <text x="80" y="480" class="small">2026-02-12 14:12</text>
+  <text x="220" y="480" class="small">Python Basics</text>
+  <text x="420" y="480" class="small">Bob</text>
+  <text x="620" y="480" class="small">NPR 3,200</text>
+  <text x="800" y="480" class="small">NPR 320</text>
+  <text x="940" y="480" class="small">NPR 2,880</text>
+  <text x="1080" y="480" class="small">1.10</text>
+  <text x="1240" y="480" class="small">USD 31.68</text>
+
+  <text x="80" y="520" class="small">2026-02-12 15:02</text>
+  <text x="220" y="520" class="small">IELTS Group</text>
+  <text x="420" y="520" class="small">Group (4)</text>
+  <text x="620" y="520" class="small">NPR 12,000</text>
+  <text x="800" y="520" class="small">NPR 1,200</text>
+  <text x="940" y="520" class="small">NPR 10,800</text>
+  <text x="1080" y="520" class="small">0.90</text>
+  <text x="1240" y="520" class="small">USD 97.20</text>
+
+  <text x="60" y="580" class="muted">Totals by currency: NPR/INR/USD — managed via Admin → Platform (buy/sell to USD)</text>
+</svg>

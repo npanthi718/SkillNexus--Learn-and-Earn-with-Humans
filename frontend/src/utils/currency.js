@@ -40,7 +40,7 @@ const COUNTRY_NAME_TO_CODE = {
 };
 
 function normalizeToCurrencySymbol(input) {
-  if (!input) return "USD";
+  if (!input) return "NPR";
   const raw = String(input).trim().toUpperCase();
   // If it's already a known currency code, return it
   if (RATES_TO_USD[raw] != null) return raw;
@@ -52,11 +52,11 @@ function normalizeToCurrencySymbol(input) {
     return COUNTRY_CURRENCY[byNameCode].symbol;
   }
   // Fallback
-  return "USD";
+  return "NPR";
 }
 
 export function getCurrencyForCountry(countryCode) {
-  if (!countryCode) return { symbol: "USD", name: "US Dollar" };
+  if (!countryCode) return { symbol: "NPR", name: "Nepalese Rupee" };
   const sym = normalizeToCurrencySymbol(countryCode);
   // Reverse lookup to find a readable name if possible
   const entry = Object.values(COUNTRY_CURRENCY).find((v) => v.symbol === sym);

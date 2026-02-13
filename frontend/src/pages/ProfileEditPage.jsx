@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "../components/Toast.jsx";
+import { useToast } from "../components/shared/Toast.jsx";
 import { getCurrencyForCountry } from "../utils/currency.js";
-import ImageUriInput from "../components/ImageUriInput.jsx";
-import VerificationUpload from "../components/VerificationUpload.jsx";
+import ImageUriInput from "../components/shared/ImageUriInput.jsx";
+import VerificationUpload from "../components/shared/VerificationUpload.jsx";
 
 const ProfileEditPage = () => {
   const [form, setForm] = useState({
