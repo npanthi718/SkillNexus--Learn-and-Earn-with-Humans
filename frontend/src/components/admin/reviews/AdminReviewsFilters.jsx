@@ -3,7 +3,7 @@ import FilterChips from "../../shared/FilterChips.jsx";
 
 const AdminReviewsFilters = ({ query, minRating, onQueryChange, onMinRatingChange }) => {
   return (
-    <div className="glass-card p-3 mb-3 flex items-center gap-2">
+    <div className="glass-card p-3 mb-3 flex items-center gap-2 overflow-x-auto whitespace-nowrap">
       <input
         type="text"
         value={query}

@@ -70,16 +70,23 @@ const Navbar = ({ onRequireAuth }) => {
           </div>
         </Link>
 
-        <button
-          type="button"
-          onClick={() => setMobileOpen((o) => !o)}
-          className={`md:hidden rounded-lg p-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/80 hover:bg-white/10"}`}
-          aria-label="Menu"
-        >
-          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <div className="flex items-center gap-2">
+          {currentUser && (
+            <div className="md:hidden">
+              <NotificationBell token={typeof window !== "undefined" ? localStorage.getItem("sn_token") : null} isLight={isLight} />
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => setMobileOpen((o) => !o)}
+            className={`md:hidden rounded-lg p-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/80 hover:bg-white/10"}`}
+            aria-label="Menu"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
         <div className={`hidden md:flex items-center gap-4 text-sm ml-2 md:ml-6`}>
           <Link
             to="/"

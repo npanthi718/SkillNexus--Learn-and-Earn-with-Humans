@@ -61,6 +61,25 @@ html.light .glass-card {
   border-radius: 1rem;
   border-width: 1px;
 }
+/* High-contrast selected filter chips */
+.filter-chip {
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.85);
+}
+.filter-chip.selected {
+  border-color: rgba(245, 158, 11, 0.5);
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fde68a;
+}
+html.light .filter-chip {
+  border-color: rgba(148, 163, 184, 0.4);
+  color: #0f172a;
+}
+html.light .filter-chip.selected {
+  border-color: #f59e0b;
+  background-color: #fde68a;
+  color: #7c2d12;
+}
 
 html.dark .glass-button {
   border-color: rgba(255, 255, 255, 0.4);
@@ -111,6 +130,7 @@ html.light .modal-overlay {
   backdrop-filter: blur(16px);
   border-radius: 1rem;
   border-width: 1px;
+  background-color: rgba(255, 255, 255, 0.05);
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -272,6 +292,10 @@ html {
   }
   .glass-card {
     padding: 0.75rem !important;
+  }
+  .modal-content,
+  .glass-card.modal {
+    max-width: 20rem;
   }
 }
 

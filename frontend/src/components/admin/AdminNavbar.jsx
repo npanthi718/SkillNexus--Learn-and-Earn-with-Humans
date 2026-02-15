@@ -73,7 +73,6 @@ const AdminNavbar = () => {
           ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Settings</Link>
-      <NotificationBell token={typeof window !== "undefined" ? localStorage.getItem("sn_token") : null} isLight={isLight} />
       <button type="button" onClick={toggleTheme} className={`rounded-lg p-2 border ${isLight ? "border-slate-300 hover:bg-slate-100" : "border-white/20 bg-white/5 hover:bg-white/10"}`} title={theme === "dark" ? "Light mode" : "Dark mode"}>{theme === "dark" ? "☀️" : "🌙"}</button>
       <button type="button" onClick={() => { setMenuOpen(false); navigate("/"); }} className={`rounded-lg border px-3 py-1.5 ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"}`}>View Site</button>
       <button type="button" onClick={() => { setMenuOpen(false); handleLogout(); }} className={`rounded-lg border px-3 py-1.5 ${isLight ? "border-red-300 bg-red-50 text-red-700 hover:bg-red-100" : "border-red-400/50 bg-red-500/20 text-red-200 hover:bg-red-500/30"}`}>Logout</button>
@@ -100,6 +99,7 @@ const AdminNavbar = () => {
         </Link>
 
         <div className="flex items-center gap-2 text-xs sm:text-sm">
+          <NotificationBell token={typeof window !== "undefined" ? localStorage.getItem("sn_token") : null} isLight={isLight} />
           <div className="hidden sm:flex flex-wrap gap-2">{NavLinks()}</div>
           <button
             type="button"
@@ -112,7 +112,7 @@ const AdminNavbar = () => {
       </nav>
       {menuOpen && (
         <div className="fixed inset-0 z-40 sm:hidden" onClick={() => setMenuOpen(false)}>
-          <div className={`absolute top-0 right-0 h-full w-64 p-4 border-l ${isLight ? "bg-white/95 border-amber-400/50" : "bg-nexus-900/95 border-amber-500/30"}`} onClick={(e) => e.stopPropagation()}>
+          <div className={`absolute top-0 right-0 h-full w-64 p-4 border-l ${isLight ? "bg-white border-amber-400/50" : "bg-nexus-900/95 border-amber-500/30"}`} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold">Admin Menu</p>
               <button type="button" onClick={() => setMenuOpen(false)} className="rounded-full p-2">✕</button>

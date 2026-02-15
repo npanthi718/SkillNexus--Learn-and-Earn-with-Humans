@@ -48,7 +48,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="glass-card w-full max-w-lg p-6 sm:p-7">
+      <div className="glass-card w-[90%] max-w-sm p-5 sm:p-7">
         <div className="flex items-center justify-between text-sm">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-white/60">
@@ -166,7 +166,7 @@ const AuthModal = ({ isOpen, onClose }) => {
           <button
             type="submit"
             disabled={loading || (mode === "register" && !form.agreedToTerms)}
-            className="glass-button mt-2 w-full bg-gradient-to-r from-nexus-500 to-purple-500 py-2 text-sm font-medium shadow-lg shadow-nexus-500/30 disabled:opacity-60"
+            className="glass-button mt-2 w-full bg-gradient-to-r from-nexus-500 to-purple-500 py-2 text-sm font-medium shadow-lg shadow-nexus-500/30 disabled:opacity-60 text-white"
           >
             {loading ? "Please wait..." : mode === "login" ? "Login" : "Sign up"}
           </button>
