@@ -40,6 +40,24 @@ const NotificationBell = ({ token, isLight }) => {
         if (n.type === "friend_request" && canceledRelated.has(id)) return false;
         return true;
       });
+      const needsStatus = cleaned
+        .filter((n) => n.type === "friend_request")
+        .map((n) => String(n.relatedId || ""))
+        .filter((id) => !!id);
+      const statusMap = {};
+      if (needsStatus.length > 0) {
+        try {
+          const results = await Promise.all(
+            needsStatus.map((id) =>
+              axios
+                .get(`/api/users/relation/${id}`, { headers: { Authorization: `Bearer ${token}` } })
+                .then((res) => ({ id, status: res.data?.status || "" }))
+                .catch(() => ({ id, status: "" }))
+            )
+          );
+          for (const r of results) statusMap[r.id] = r.status;
+        } catch {}
+      }
       const serverProcessed = new Map();
       for (const n of cleaned) {
         const id = String(n.relatedId || "");
@@ -63,11 +81,17 @@ const NotificationBell = ({ token, isLight }) => {
         const merged = cleaned.map((n) => {
           if (n.type === "friend_request") {
             const id = String(n.relatedId || "");
-            const p = serverProcessed.get(id) || processedMap.get(id) || localStatuses[id];
+            const relation = statusMap[id];
+            const p =
+              serverProcessed.get(id) ||
+              processedMap.get(id) ||
+              localStatuses[id] ||
+              (relation === "friends" ? "accepted" : relation === "none" ? "canceled" : undefined);
+            if (p === "canceled") return null;
             if (p) return { ...n, processed: p, read: true };
           }
           return n;
-        });
+        }).filter(Boolean);
         const final = merged.filter((n) => {
           const id = String(n.relatedId || "");
           if (n.type !== "friend_request" && (processedMap.has(id) || serverProcessed.has(id) || localStatuses[id])) return false;
