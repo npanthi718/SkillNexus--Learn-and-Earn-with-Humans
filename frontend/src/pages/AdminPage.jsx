@@ -184,8 +184,12 @@ const AdminPage = () => {
           setLegalDocs(legalRes?.data?.legal || []);
         }
       } catch (error) {
-        console.error("Admin load error", error);
-        navigate("/");
+        const status = error?.response?.status;
+        if (status === 401 || status === 403) {
+          navigate("/auth");
+        } else {
+          navigate("/");
+        }
       } finally {
         setLoading(false);
       }

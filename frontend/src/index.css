@@ -264,10 +264,14 @@ html {
     font-size: 1rem;
   }
   .rounded-full.border,
-  .rounded-lg.border {
+  .rounded-lg.border,
+  .rounded.border {
     min-height: 40px;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+  }
+  .glass-card {
+    padding: 0.75rem !important;
   }
 }
 

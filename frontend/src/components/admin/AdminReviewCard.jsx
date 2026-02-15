@@ -23,7 +23,7 @@ const AdminReviewCard = ({ review, onUpdate, onDelete }) => {
           <p className="mt-1 text-[10px] text-white/50">
             Session: {review.sessionId?.skillName || "Unknown"} · {new Date(review.createdAt).toLocaleDateString()}
           </p>
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setEditing(true)}
@@ -63,7 +63,7 @@ const AdminReviewCard = ({ review, onUpdate, onDelete }) => {
               rows={2}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={handleSave}
