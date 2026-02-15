@@ -32,7 +32,7 @@ const AdminNavbar = () => {
         onClick={() => setMenuOpen(false)}
         className={`rounded-lg border px-3 py-1.5 ${
           location.pathname === "/admin" || location.pathname === "/admin/"
-            ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+            ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
             : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
         }`}
       >
@@ -40,37 +40,37 @@ const AdminNavbar = () => {
       </Link>
       <Link to="/admin/users" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/users")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Users</Link>
       <Link to="/admin/sessions" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/sessions")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Sessions</Link>
       <Link to="/admin/messages" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/messages")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Messages</Link>
       <Link to="/admin/reviews" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/reviews")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Reviews</Link>
       <Link to="/admin/payments" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/payments")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Payments</Link>
       <Link to="/admin/earnings" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/earnings")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Statement</Link>
       <Link to="/admin/settings" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/settings")
-          ? isLight ? "border-amber-500/50 bg-amber-500/20 text-amber-800" : "border-amber-500/40 bg-amber-500/20 text-amber-200"
+          ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Settings</Link>
       <button type="button" onClick={toggleTheme} className={`rounded-lg p-2 border ${isLight ? "border-slate-300 hover:bg-slate-100" : "border-white/20 bg-white/5 hover:bg-white/10"}`} title={theme === "dark" ? "Light mode" : "Dark mode"}>{theme === "dark" ? "☀️" : "🌙"}</button>

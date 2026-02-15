@@ -39,6 +39,9 @@ const ProfileFriendActions = ({ userId }) => {
     try {
       await axios.post(`/api/users/friends/${userId}/accept`, {}, { headers: { Authorization: `Bearer ${token}` } });
       setStatus("friends");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("sn:notifications:refresh"));
+      }
       showToast("Friend request accepted", "success");
     } catch {
       showToast("Could not accept request", "error");

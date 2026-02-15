@@ -11,6 +11,18 @@ const Navbar = ({ onRequireAuth }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const desktopLinkCls = (path) => {
+    const active = location.pathname === path || (path !== "/" && location.pathname.startsWith(path));
+    const base = isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white";
+    const selected = "bg-gradient-to-r from-nexus-500 to-purple-500 text-white";
+    return `flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${active ? selected : base}`;
+  };
+  const linkCls = (path) => {
+    const active = location.pathname === path || (path !== "/" && location.pathname.startsWith(path));
+    const base = isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10";
+    const selected = "bg-gradient-to-r from-nexus-500 to-purple-500 text-white";
+    return `block rounded-lg px-3 py-2 ${active ? selected : base}`;
+  };
   const goto = (path) => {
     const token = typeof window !== "undefined" ? localStorage.getItem("sn_token") : null;
     if (token) navigate(path);
@@ -88,39 +100,19 @@ const Navbar = ({ onRequireAuth }) => {
           </button>
         </div>
         <div className={`hidden md:flex items-center gap-4 text-sm ml-2 md:ml-6`}>
-          <Link
-            to="/"
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-              isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white"
-            }`}
-          >
+          <Link to="/" className={desktopLinkCls("/")}>
             <span>🏠</span>
             <span>Home</span>
           </Link>
-          <Link
-            to="/teachers"
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-              isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white"
-            }`}
-          >
+          <Link to="/teachers" className={desktopLinkCls("/teachers")}>
             <span>👨‍🏫</span>
             <span>Teachers</span>
           </Link>
-          <Link
-            to="/users"
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-              isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white"
-            }`}
-          >
+          <Link to="/users" className={desktopLinkCls("/users")}>
             <span>👥</span>
             <span>Users</span>
           </Link>
-          <Link
-            to="/dashboard"
-            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-              isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white"
-            }`}
-          >
+          <Link to="/dashboard" className={desktopLinkCls("/dashboard")}>
             <span>📊</span>
             <span>Dashboard</span>
           </Link>
@@ -209,28 +201,28 @@ const Navbar = ({ onRequireAuth }) => {
               <Link
                 to="/"
                 onClick={() => setMobileOpen(false)}
-                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                className={linkCls("/")}
               >
                 🏠 Home
               </Link>
               <Link
                 to="/teachers"
                 onClick={() => setMobileOpen(false)}
-                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                className={linkCls("/teachers")}
               >
                 👨‍🏫 Teachers
               </Link>
               <Link
                 to="/users"
                 onClick={() => setMobileOpen(false)}
-                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                className={linkCls("/users")}
               >
                 👥 Users
               </Link>
               <Link
                 to="/dashboard"
                 onClick={() => setMobileOpen(false)}
-                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                className={linkCls("/dashboard")}
               >
                 📊 Dashboard
               </Link>

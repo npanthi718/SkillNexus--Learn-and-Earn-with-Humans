@@ -23,6 +23,9 @@ const FriendRequestsCard = ({ friendRequests, setFriendRequests, navigate, token
                   onClick={async () => {
                     await axios.post(`/api/users/friends/${fr.fromUserId}/accept`, {}, { headers: { Authorization: `Bearer ${token}` } });
                     setFriendRequests((prev) => prev.filter((x) => x.fromUserId !== fr.fromUserId));
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("sn:notifications:refresh"));
+                    }
                   }}
                   className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[11px] text-emerald-200"
                 >
@@ -33,6 +36,9 @@ const FriendRequestsCard = ({ friendRequests, setFriendRequests, navigate, token
                   onClick={async () => {
                     await axios.post(`/api/users/friends/${fr.fromUserId}/reject`, {}, { headers: { Authorization: `Bearer ${token}` } });
                     setFriendRequests((prev) => prev.filter((x) => x.fromUserId !== fr.fromUserId));
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("sn:notifications:refresh"));
+                    }
                   }}
                   className="rounded border border-red-400/50 bg-red-500/20 px-2 py-0.5 text-[11px] text-red-200"
                 >

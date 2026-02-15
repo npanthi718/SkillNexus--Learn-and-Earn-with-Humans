@@ -3,7 +3,7 @@ import FilterChips from "../../shared/FilterChips.jsx";
 
 const AdminUsersFilters = ({ query, role, teacherVerified, learnerVerified, minTrust, onQuery, onRole, onTeacherVerified, onLearnerVerified, onMinTrust }) => {
   return (
-    <div className="glass-card p-3 mb-3 flex flex-wrap items-center gap-2">
+    <div className="glass-card p-3 mb-3 flex items-center gap-2 overflow-x-auto whitespace-nowrap">
       <input
         type="text"
         value={query}

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useToast } from "./Toast.jsx";
 
 const NotificationBell = ({ token, isLight }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [open, setOpen] = useState(false);
+  const { showToast } = useToast();
 
   const fetchNotifications = async () => {
     if (!token) return;
@@ -30,6 +32,10 @@ const NotificationBell = ({ token, isLight }) => {
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 30000);
+    const handler = () => fetchNotifications();
+    if (typeof window !== "undefined") {
+      window.addEventListener("sn:notifications:refresh", handler);
+    }
     return () => clearInterval(interval);
   }, [token]);
 
@@ -66,7 +72,13 @@ const NotificationBell = ({ token, isLight }) => {
       });
       if (notifId) markRead(notifId);
       setNotifications((prev) => prev.map((n) => n._id === notifId ? { ...n, read: true } : n));
-    } catch {}
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("sn:notifications:refresh"));
+      }
+      showToast("Friend request accepted", "success");
+    } catch (err) {
+      showToast(err.response?.data?.message || "Could not accept request", "error");
+    }
   };
   const rejectFriend = async (otherId, notifId) => {
     try {
@@ -75,7 +87,13 @@ const NotificationBell = ({ token, isLight }) => {
       });
       if (notifId) markRead(notifId);
       setNotifications((prev) => prev.map((n) => n._id === notifId ? { ...n, read: true } : n));
-    } catch {}
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("sn:notifications:refresh"));
+      }
+      showToast("Friend request rejected", "success");
+    } catch (err) {
+      showToast(err.response?.data?.message || "Could not reject request", "error");
+    }
   };
 
   if (!token) return null;
