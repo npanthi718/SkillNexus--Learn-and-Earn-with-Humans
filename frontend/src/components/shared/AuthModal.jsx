@@ -9,18 +9,22 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  if (!isOpen) return null;
-
   useEffect(() => {
     try {
-      document.body.classList.add("modal-open");
+      if (isOpen) {
+        document.body.classList.add("modal-open");
+      } else {
+        document.body.classList.remove("modal-open");
+      }
     } catch {}
     return () => {
       try {
         document.body.classList.remove("modal-open");
       } catch {}
     };
-  }, []);
+  }, [isOpen]);
+  
+  if (!isOpen) return null;
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
