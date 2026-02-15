@@ -10,9 +10,6 @@
 
 SkillNexus connects learners and teachers worldwide with transparent payments, group learning, and real-time messaging — built with an NPR-centric accounting pipeline for clarity and fairness.
 
-<p>
-  <img src="docs/assets/architecture.svg" alt="SkillNexus Architecture" />
-</p>
 
 ## 💡 Why SkillNexus?
 - Make learning accessible across countries and currencies
@@ -132,9 +129,6 @@ SkillNexus/
 
 ## 🖼️ Design & Diagrams
 <p>
-  <img src="docs/assets/sequence.svg" alt="Sequence Diagram" />
-</p>
-<p>
   <img src="docs/assets/deployment.svg" alt="Deployment Diagram" />
 </p>
 <p>
@@ -155,17 +149,12 @@ SkillNexus/
 <p>
   <img src="docs/assets/use-case.svg" alt="Use Case Diagram" />
 </p>
-<p>
-  <img src="docs/assets/output.svg" alt="Output • Stylized Screenshot" />
-</p>
 
 ## 🖼️ Screenshots (High-Fidelity SVGs)
 <p>
   <img src="docs/assets/ui-dashboard.svg" alt="Dashboard" />
 </p>
-<p>
-  <img src="docs/assets/ui-admin.svg" alt="Admin · Earnings" />
-</p>
+
 <p>
   <img src="docs/assets/ui-groupchat.svg" alt="Group Chat" />
 </p>
@@ -177,9 +166,6 @@ SkillNexus/
 </p>
 <p>
   <img src="docs/assets/ui-wallet-learner.svg" alt="Wallet · Learner" />
-</p>
-<p>
-  <img src="docs/assets/ui-wallet-teacher.svg" alt="Wallet · Teacher" />
 </p>
 
 ## 🔧 Deployment Config
