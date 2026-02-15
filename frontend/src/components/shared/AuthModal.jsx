@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,17 @@ const AuthModal = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   if (!isOpen) return null;
+
+  useEffect(() => {
+    try {
+      document.body.classList.add("modal-open");
+    } catch {}
+    return () => {
+      try {
+        document.body.classList.remove("modal-open");
+      } catch {}
+    };
+  }, []);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -47,8 +58,8 @@ const AuthModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="glass-card w-[92%] max-w-sm max-h-[85vh] overflow-auto p-5 sm:p-7">
+    <div className="fixed inset-0 z-40 flex min-h-[100svh] items-center justify-center bg-black/60 backdrop-blur-sm p-3">
+      <div className="glass-card w-full max-w-sm max-h-[85vh] overflow-auto p-5 sm:p-7">
         <div className="flex items-center justify-between text-sm">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-white/60">

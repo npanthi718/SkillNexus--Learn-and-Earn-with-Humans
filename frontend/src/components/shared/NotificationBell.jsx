@@ -13,6 +13,11 @@ const NotificationBell = ({ token, isLight }) => {
   const fetchNotifications = async () => {
     if (!token) return;
     try {
+      let localStatuses = {};
+      try {
+        const raw = localStorage.getItem("sn_friend_statuses");
+        localStatuses = raw ? JSON.parse(raw) : {};
+      } catch {}
       const { data } = await axios.get("/api/notifications", {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -58,14 +63,14 @@ const NotificationBell = ({ token, isLight }) => {
         const merged = cleaned.map((n) => {
           if (n.type === "friend_request") {
             const id = String(n.relatedId || "");
-            const p = serverProcessed.get(id) || processedMap.get(id);
+            const p = serverProcessed.get(id) || processedMap.get(id) || localStatuses[id];
             if (p) return { ...n, processed: p, read: true };
           }
           return n;
         });
         const final = merged.filter((n) => {
           const id = String(n.relatedId || "");
-          if (n.type !== "friend_request" && (processedMap.has(id) || serverProcessed.has(id))) return false;
+          if (n.type !== "friend_request" && (processedMap.has(id) || serverProcessed.has(id) || localStatuses[id])) return false;
           return true;
         });
         return final;
@@ -147,6 +152,12 @@ const NotificationBell = ({ token, isLight }) => {
             : n
         )
       );
+      try {
+        const raw = localStorage.getItem("sn_friend_statuses");
+        const map = raw ? JSON.parse(raw) : {};
+        map[String(otherId)] = "accepted";
+        localStorage.setItem("sn_friend_statuses", JSON.stringify(map));
+      } catch {}
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("sn:notifications:refresh"));
       }
@@ -172,6 +183,12 @@ const NotificationBell = ({ token, isLight }) => {
             : n
         )
       );
+      try {
+        const raw = localStorage.getItem("sn_friend_statuses");
+        const map = raw ? JSON.parse(raw) : {};
+        map[String(otherId)] = "rejected";
+        localStorage.setItem("sn_friend_statuses", JSON.stringify(map));
+      } catch {}
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("sn:notifications:refresh"));
       }

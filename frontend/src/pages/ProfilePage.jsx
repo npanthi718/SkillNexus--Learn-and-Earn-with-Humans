@@ -56,6 +56,12 @@ const ProfileFriendActions = ({ userId }) => {
         window.dispatchEvent(new CustomEvent("sn:friend_request:cancel", { detail: { otherId: userId } }));
         window.dispatchEvent(new Event("sn:notifications:refresh"));
       }
+      try {
+        const raw = localStorage.getItem("sn_friend_statuses");
+        const map = raw ? JSON.parse(raw) : {};
+        map[String(userId)] = "canceled";
+        localStorage.setItem("sn_friend_statuses", JSON.stringify(map));
+      } catch {}
       showToast("Request canceled", "success");
     } catch {
       showToast("Could not cancel request", "error");

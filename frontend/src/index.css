@@ -275,6 +275,11 @@ html.light h1, html.light h2, html.light h3, html.light h4 { color: #0f172a !imp
   border-radius: 999px;
 }
 
+/* Lock background scroll when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
 /* Base font size - responsive readability */
 html {
   font-size: clamp(15px, 1.05vw, 17px);
