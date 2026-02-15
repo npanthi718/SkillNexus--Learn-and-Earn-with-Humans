@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import { authRequired } from "../middleware/authMiddleware.js";
 import { Session } from "../models/Session.js";
 import { GroupChat } from "../models/GroupChat.js";
@@ -54,7 +55,7 @@ router.post("/session/:sessionId/create", authRequired, async (req, res) => {
       session.teacherId,
       ...(session.groupMembers || []).map((m) => m.userId).filter(Boolean)
     ];
-    const uniqueMembers = Array.from(new Set(members.map((id) => id?.toString()))).filter(Boolean);
+    const uniqueMembers = Array.from(new Set(members.map((id) => id?.toString()))).filter(Boolean).map((id) => new mongoose.Types.ObjectId(id));
     const slug = `session-${session._id}`;
     let chat = await GroupChat.findOne({ slug });
     if (!chat) {
@@ -79,10 +80,23 @@ router.post("/session/:sessionId/create", authRequired, async (req, res) => {
 // List messages in a group chat
 router.get("/:groupId/messages", authRequired, async (req, res) => {
   try {
-    const chat = await GroupChat.findById(req.params.groupId).populate("members", "_id name profilePic");
+    let chat = await GroupChat.findById(req.params.groupId).populate("members", "_id name profilePic");
     if (!chat) return res.status(404).json({ message: "Group chat not found" });
     const isMember = (chat.members || []).some((id) => id.toString() === req.user._id.toString());
-    if (!isMember) return res.status(403).json({ message: "Not a member of this group chat" });
+    if (!isMember) {
+      const session = chat.sessionId ? await Session.findById(chat.sessionId).lean() : null;
+      const inSession =
+        session &&
+        (session.learnerId?.toString() === req.user._id.toString() ||
+          session.teacherId?.toString() === req.user._id.toString() ||
+          (Array.isArray(session.groupMembers) &&
+            session.groupMembers.some((m) => m?.userId?.toString() === req.user._id.toString())));
+      if (!inSession) {
+        return res.status(403).json({ message: "Not a member of this group chat" });
+      }
+      await GroupChat.updateOne({ _id: chat._id }, { $addToSet: { members: req.user._id } });
+      chat = await GroupChat.findById(req.params.groupId).populate("members", "_id name profilePic");
+    }
     const messages = await GroupMessage.find({ groupId: chat._id, isDeleted: { $ne: true } })
       .populate("senderId", "_id name profilePic")
       .sort({ createdAt: 1 })

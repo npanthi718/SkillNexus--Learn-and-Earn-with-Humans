@@ -86,6 +86,7 @@ const AdminPage = () => {
   const [minTrustFilter, setMinTrustFilter] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
+  const [refreshKey, setRefreshKey] = useState(0);
   
   // Get active tab from URL
   const getActiveTab = () => {
@@ -196,7 +197,29 @@ const AdminPage = () => {
     };
     loadAdmin();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, activeTab]);
+  }, [token, activeTab, earningsFrom, earningsTo, refreshKey]);
+
+  useEffect(() => {
+    const bump = () => setRefreshKey((k) => k + 1);
+    const onFocus = () => bump();
+    const onVis = () => { if (document.visibilityState === "visible") bump(); };
+    if (typeof window !== "undefined") {
+      window.addEventListener("sn:sessions:refresh", bump);
+      window.addEventListener("sn:wallet:refresh", bump);
+      window.addEventListener("sn:admin:refresh", bump);
+      window.addEventListener("focus", onFocus);
+      document.addEventListener("visibilitychange", onVis);
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("sn:sessions:refresh", bump);
+        window.removeEventListener("sn:wallet:refresh", bump);
+        window.removeEventListener("sn:admin:refresh", bump);
+        window.removeEventListener("focus", onFocus);
+        document.removeEventListener("visibilitychange", onVis);
+      }
+    };
+  }, []);
 
   // Deep link: focus user from notifications
   useEffect(() => {
@@ -236,6 +259,7 @@ const AdminPage = () => {
       if (selectedUser === userId) {
         setSelectedUserData(data.user);
       }
+      try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:admin:refresh")); } catch {}
     } catch (error) {
       console.error("Update user error", error);
     }
@@ -260,6 +284,7 @@ const AdminPage = () => {
           asTeacher: prev.asTeacher.map((s) => (s._id === sessionId ? data.session : s))
         }));
       }
+      try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:admin:refresh")); } catch {}
     } catch (error) {
       console.error("Update session error", error);
     }
@@ -278,6 +303,7 @@ const AdminPage = () => {
         const userRes = await axios.get(`/api/admin/users/${userId}`, { headers: authHeaders });
         setSelectedUserData(userRes.data.user);
       }
+      try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:admin:refresh")); } catch {}
     } catch (error) {
       console.error("Award badge error", error);
     }
@@ -295,6 +321,7 @@ const AdminPage = () => {
         const userRes = await axios.get(`/api/admin/users/${userId}`, { headers: authHeaders });
         setSelectedUserData(userRes.data.user);
       }
+      try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:admin:refresh")); } catch {}
     } catch (error) {
       console.error("Remove badge error", error);
     }
@@ -434,7 +461,11 @@ const AdminPage = () => {
             )}
             {(earningsData.transactions || []).length > 0 && (
               <VisibilityMount placeholder={<Loader size="xs" />}>
-                <AdminTransactionsTable earningsData={earningsData} currencyRates={currencyRates} />
+                <AdminTransactionsTable
+                  earningsData={earningsData}
+                  currencyRates={currencyRates}
+                  onOpenPayout={(tx) => setSelectedTransactionDetail(tx)}
+                />
               </VisibilityMount>
             )}
 
@@ -740,6 +771,18 @@ const AdminPage = () => {
                     if (h.key === "status") {
                       const cls = t.status === "paid_to_teacher" ? "status-paid" : t.status === "reverted_to_learner" ? "status-reverted" : t.status === "complaint_raised" ? "status-complaint" : "status-pending";
                       const txt = t.status === "paid_to_teacher" ? "Paid to teacher" : t.status === "reverted_to_learner" ? "Reverted to learner" : t.status === "complaint_raised" ? "Complaint" : "Pending payout";
+                      if (t.status === "pending_payout") {
+                        return (
+                          <button
+                            type="button"
+                            onClick={() => setSelectedTransactionDetail(t)}
+                            className={`${cls} underline decoration-dotted`}
+                            title="Open payout"
+                          >
+                            {txt}
+                          </button>
+                        );
+                      }
                       return <span className={cls}>{txt}</span>;
                     }
                     return "";

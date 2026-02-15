@@ -131,19 +131,31 @@ const TeacherAcceptedSessions = ({
                       Chat with learner
                     </button>
                   )}
-                  {s.status === "Accepted" && (
-                    <button
-                      type="button"
-                      onClick={() => handleCompleteSession(
-                        s._id,
-                        s.learnerId?._id || s.learnerId,
-                        s.learnerId?.name || "Learner"
-                      )}
-                      className="mt-2 rounded-lg bg-emerald-500/20 border border-emerald-400/50 px-3 py-1 text-[11px] text-emerald-200 hover:bg-emerald-500/30"
-                    >
-                      Mark as Complete
-                    </button>
-                  )}
+                  {(() => {
+                    if (s.status !== "Accepted") return null;
+                    const requiresPayment = !s.isFree && (s.budget || 0) > 0;
+                    const total = 1 + (s.groupMembers?.length || 0);
+                    const paid = (s.paidMemberIds?.length || 0);
+                    const groupPaid = s.paymentSplitMode === "equal" ? (paid >= total) : !!s.paymentCompletedByLearner;
+                    const canComplete = !requiresPayment || groupPaid;
+                    return (
+                      <button
+                        type="button"
+                        disabled={!canComplete}
+                        onClick={() => {
+                          if (!canComplete) return;
+                          handleCompleteSession(
+                            s._id,
+                            s.learnerId?._id || s.learnerId,
+                            s.learnerId?.name || "Learner"
+                          );
+                        }}
+                        className={`mt-2 rounded-lg px-3 py-1 text-[11px] border ${canComplete ? "bg-emerald-500/20 border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/30" : "bg-white/5 border-white/10 text-white/50 cursor-not-allowed"}`}
+                      >
+                        {canComplete ? "Mark as Complete" : s.paymentSplitMode === "equal" ? `Waiting payments ${paid}/${total}` : "Complete after payment"}
+                      </button>
+                    );
+                  })()}
                   {s.status === "Accepted" && (
                     <button
                       type="button"

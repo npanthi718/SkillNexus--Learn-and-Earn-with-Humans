@@ -191,6 +191,11 @@ const LearnerCreateRequestForm = ({
             })
               .then(() => {
                 setNewRequest({ skillName: "", details: "", budget: "", isFree: false, groupEnabled: false, groupEmailsList: [], groupEmailInput: "", splitMode: "single" });
+                try {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("sn:sessions:refresh"));
+                  }
+                } catch {}
               })
               .catch(() => {});
           }}

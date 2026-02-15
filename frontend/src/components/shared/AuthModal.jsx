@@ -43,6 +43,9 @@ const AuthModal = ({ isOpen, onClose }) => {
 
       const { data } = await axios.post(url, payload);
       localStorage.setItem("sn_token", data.token);
+      try {
+        axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
+      } catch {}
       onClose();
       const nextRaw = typeof window !== "undefined" ? localStorage.getItem("sn_redirect") : null;
       const next = typeof nextRaw === "string" && nextRaw.startsWith("/") ? nextRaw : "";

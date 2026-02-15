@@ -1,7 +1,7 @@
 import React from "react";
 import ResponsiveTableCards from "../shared/ResponsiveTableCards.jsx";
 
-const AdminTransactionsTable = ({ earningsData, currencyRates }) => {
+const AdminTransactionsTable = ({ earningsData, currencyRates, onOpenPayout }) => {
   const txs = earningsData?.transactions || [];
   if (txs.length === 0) return null;
   const headers = [
@@ -12,7 +12,8 @@ const AdminTransactionsTable = ({ earningsData, currencyRates }) => {
     { key: "fee", label: "Fee (NPR)" },
     { key: "net", label: "Net (NPR)" },
     { key: "rate", label: "Rate NPR→Payout" },
-    { key: "payout", label: "Payout amount" }
+    { key: "payout", label: "Payout amount" },
+    { key: "actions", label: "Actions" }
   ];
   return (
     <div className="glass-card p-4">
@@ -41,6 +42,20 @@ const AdminTransactionsTable = ({ earningsData, currencyRates }) => {
           if (h.key === "net") return `NPR ${Number(t.teacherAmountNPR || 0).toLocaleString()}`;
           if (h.key === "rate") return `${Number(rate || 0).toFixed(6)} · NPR→${payout}`;
           if (h.key === "payout") return `${payout} ${Number(payoutAmt || 0).toLocaleString()}`;
+          if (h.key === "actions") {
+            if (t.status === "pending_payout") {
+              return (
+                <button
+                  type="button"
+                  onClick={() => onOpenPayout && onOpenPayout(t)}
+                  className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200"
+                >
+                  Open payout
+                </button>
+              );
+            }
+            return "";
+          }
           return "";
         }}
       />

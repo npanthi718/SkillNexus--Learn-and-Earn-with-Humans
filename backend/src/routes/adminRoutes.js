@@ -611,6 +611,12 @@ router.patch("/transactions/:id/pay", async (req, res) => {
     const { exchangeRate, payoutAmount, note, overrideFeePercent } = req.body || {};
     const txBefore = await Transaction.findById(req.params.id);
     if (!txBefore) return res.status(404).json({ message: "Transaction not found" });
+    if (txBefore.status === "paid_to_teacher") {
+      return res.status(400).json({ message: "Already paid to teacher" });
+    }
+    if (txBefore.status === "reverted_to_learner") {
+      return res.status(400).json({ message: "Cannot pay: reverted to learner" });
+    }
     // Optional override of platform fee % for this payout (recompute both payer currency and NPR)
     let platformFeePercent = txBefore.platformFeePercent;
     let platformFeeAmount = txBefore.platformFeeAmount; // payer currency

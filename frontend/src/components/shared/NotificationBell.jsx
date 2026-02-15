@@ -102,6 +102,14 @@ const NotificationBell = ({ token, isLight }) => {
       setUnreadCount(
         (cleaned.filter((n) => !n.read).length) || 0
       );
+      try {
+        const hasSessionUpdate = cleaned.some((n) => n.type === "session_status_update");
+        const hasPaymentUpdate = cleaned.some((n) => n.type === "payout_received" || n.type === "payment_reverted");
+        if (typeof window !== "undefined") {
+          if (hasSessionUpdate) window.dispatchEvent(new Event("sn:sessions:refresh"));
+          if (hasPaymentUpdate) window.dispatchEvent(new Event("sn:wallet:refresh"));
+        }
+      } catch {}
     } catch (err) {}
   };
 

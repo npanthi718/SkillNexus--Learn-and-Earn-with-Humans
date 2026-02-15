@@ -489,16 +489,20 @@ router.post("/:id/complete", authRequired, async (req, res) => {
     }
 
     const requiresPayment = !session.isFree && (session.budget || 0) > 0;
-  if (requiresPayment && session.paymentSplitMode === "equal") {
-    const total = 1 + (Array.isArray(session.groupMembers) ? session.groupMembers.length : 0);
-    const paid = Array.isArray(session.paidMemberIds) ? session.paidMemberIds.length : 0;
-    if (paid < total) {
-      const outstandingCount = total - paid;
-      return res.status(400).json({ message: `Group payment pending: ${outstandingCount} participant(s) still need to pay.` });
+    if (requiresPayment) {
+      if (session.paymentSplitMode === "equal") {
+        const total = 1 + (Array.isArray(session.groupMembers) ? session.groupMembers.length : 0);
+        const paid = Array.isArray(session.paidMemberIds) ? session.paidMemberIds.length : 0;
+        if (paid < total) {
+          const outstandingCount = total - paid;
+          return res.status(400).json({ message: `Group payment pending: ${outstandingCount} participant(s) still need to pay.` });
+        }
+      } else {
+        if (!session.paymentCompletedByLearner) {
+          return res.status(400).json({ message: "Please pay or mark as paid before completing" });
+        }
+      }
     }
-  } else if (actorIsLearner && requiresPayment && !session.paymentCompletedByLearner) {
-    return res.status(400).json({ message: "Please pay or mark as paid before completing" });
-  }
 
     session.status = "Completed";
     await session.save();

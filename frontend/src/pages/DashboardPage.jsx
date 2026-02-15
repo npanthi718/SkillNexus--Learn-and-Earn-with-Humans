@@ -139,6 +139,44 @@ const DashboardPage = () => {
     setPaymentDetailsModal({ open: true, teacher: next?.teacher || null, session: next?.session || null, isPlatform: !!next?.isPlatform });
   };
 
+  useEffect(() => {
+    const refreshSessions = async () => {
+      try {
+        const [requestsRes, teachingRes] = await Promise.all([
+          axios.get("/api/sessions/my-requests", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { requests: [] } })),
+          axios.get("/api/sessions/my-teaching", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { sessions: [] } }))
+        ]);
+        setMyRequests(requestsRes.data.requests || []);
+        setMyTeaching(teachingRes.data.sessions || []);
+      } catch {}
+    };
+    const refreshWallet = async () => {
+      try {
+        const walletRes = await axios.get("/api/transactions/wallet", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { asLearner: [], asTeacher: [] } }));
+        setWallet(walletRes.data);
+      } catch {}
+    };
+    const sessionsHandler = () => refreshSessions();
+    const walletHandler = () => refreshWallet();
+    if (typeof window !== "undefined") {
+      window.addEventListener("sn:sessions:refresh", sessionsHandler);
+      window.addEventListener("sn:wallet:refresh", walletHandler);
+      window.addEventListener("sn:notifications:refresh", sessionsHandler);
+      const onFocus = () => { refreshSessions(); refreshWallet(); };
+      const onVis = () => { if (document.visibilityState === "visible") { refreshSessions(); refreshWallet(); } };
+      window.addEventListener("focus", onFocus);
+      document.addEventListener("visibilitychange", onVis);
+      return () => {
+        window.removeEventListener("sn:sessions:refresh", sessionsHandler);
+        window.removeEventListener("sn:wallet:refresh", walletHandler);
+        window.removeEventListener("sn:notifications:refresh", sessionsHandler);
+        window.removeEventListener("focus", onFocus);
+        document.removeEventListener("visibilitychange", onVis);
+      };
+    }
+    return () => {};
+  }, [token]);
+
   const handleToggle = async (desiredTeacherMode) => {
     if (!token) return;
     if (!!user.isTeacherMode === !!desiredTeacherMode) return;
@@ -189,6 +227,7 @@ const DashboardPage = () => {
       });
       setMyRequests((prev) => [data.request, ...prev]);
       setNewRequest({ skillName: "", details: "", budget: "", isFree: false, groupEnabled: false, groupEmailsList: [], groupEmailInput: "", splitMode: "single" });
+      try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:sessions:refresh")); } catch {}
     } catch (err) {
       const invalid = err.response?.data?.invalidEmails || [];
       if (invalid.length > 0) {
@@ -224,9 +263,11 @@ const DashboardPage = () => {
       
       // Open review modal
       setReviewModal({ open: true, sessionId, revieweeId, revieweeName });
+      try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:sessions:refresh")); } catch {}
     } catch (err) {
-      setError("Could not mark session as complete");
-      showToast("Could not mark session as complete", "error");
+      const msg = err.response?.data?.message || "Could not mark session as complete";
+      setError(msg);
+      showToast(msg, "error");
     }
   };
 
@@ -446,6 +487,11 @@ const DashboardPage = () => {
               setPublicOffers((prev) => prev.filter((x) => x._id !== offerPreview.offer._id));
               setOfferPreview({ open: false, offer: null, payerCur: "USD", payoutCur: "USD", learnerPays: 0, feeNPR: 0, netNPR: 0, teacherReceives: 0 });
               showToast("Offer accepted.", "success");
+              try {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("sn:sessions:refresh"));
+                }
+              } catch {}
             } catch (err) {
               showToast(err.response?.data?.message || "Could not accept offer", "error");
             }
@@ -479,6 +525,7 @@ const DashboardPage = () => {
         onSaved={async () => {
           const teachingRes = await axios.get("/api/sessions/my-teaching", { headers: { Authorization: `Bearer ${token}` } });
           setMyTeaching(teachingRes.data.sessions || []);
+          try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:sessions:refresh")); } catch {}
         }}
         showToast={showToast}
       />
@@ -492,6 +539,7 @@ const DashboardPage = () => {
         onSaved={async () => {
           const teachingRes = await axios.get("/api/sessions/my-teaching", { headers: { Authorization: `Bearer ${token}` } });
           setMyTeaching(teachingRes.data.sessions || []);
+          try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:sessions:refresh")); } catch {}
         }}
         showToast={showToast}
       />
@@ -505,6 +553,7 @@ const DashboardPage = () => {
         onSaved={async () => {
           const reqRes = await axios.get("/api/sessions/my-requests", { headers: { Authorization: `Bearer ${token}` } });
           setMyRequests(reqRes.data.requests || []);
+          try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:sessions:refresh")); } catch {}
         }}
         showToast={showToast}
       />
@@ -515,7 +564,10 @@ const DashboardPage = () => {
         learnerDeleteModal={learnerDeleteModal}
         setLearnerDeleteModal={setLearnerDeleteModal}
         token={token}
-        onDeleted={(id) => setMyRequests((prev) => prev.filter((x) => x._id !== id))}
+        onDeleted={(id) => {
+          setMyRequests((prev) => prev.filter((x) => x._id !== id));
+          try { if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:sessions:refresh")); } catch {}
+        }}
         showToast={showToast}
       />
       </Suspense>

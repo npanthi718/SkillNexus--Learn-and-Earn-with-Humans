@@ -345,8 +345,9 @@ const LearnerRequestsTabs = ({
                         <div className="mt-2">
                           <p className="mb-1 text-white/80">
                             {(() => {
-                              const toCur = getCurrencyForCountry(user?.country).symbol;
-                              const fromCur = r.budgetCurrency || (getCurrencyForCountry(r.teacherId?.country).symbol);
+                              const toSym = getCurrencyForCountry(user?.country).symbol;
+                              const toCur = toSym === "£" ? "GBP" : toSym === "€" ? "EUR" : toSym;
+                              const fromCur = String(r.budgetCurrency || "USD").toUpperCase();
                               const totalParticipants = 1 + (r.groupMembers?.length || 0);
                               const perShare = (r.budget || 0) / (r.paymentSplitMode === "equal" ? Math.max(1, totalParticipants) : 1);
                               if (r.isFree || !(r.budget > 0)) {
@@ -356,31 +357,51 @@ const LearnerRequestsTabs = ({
                               return <>Amount to pay: {formatAmount(amt, user?.country)}</>;
                             })()}
                           </p>
-                          <button
-                            type="button"
-                            onClick={async () => {
-                              try {
-                                await axios.post(
-                                  `/api/sessions/${r._id}/payment-done`,
-                                  {},
-                                  { headers: { Authorization: `Bearer ${token}` } }
-                                );
-                                const [reqRes, walletRes] = await Promise.all([
-                                  axios.get("/api/sessions/my-requests", { headers: { Authorization: `Bearer ${token}` } }),
-                                  axios.get("/api/transactions/wallet", { headers: { Authorization: `Bearer ${token}` } })
-                                ]);
-                                setMyRequests(reqRes.data.requests || []);
-                                setWallet(walletRes.data);
-                                showToast("Payment recorded.", "success");
-                              } catch (err) {
-                                setError("Could not update payment status");
-                                showToast(err.response?.data?.message || "Could not record payment", "error");
-                              }
-                            }}
-                            className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200"
-                          >
-                            Mark as paid
-                          </button>
+                          <div className="mt-2 flex gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setPaymentDetailsModal({
+                                open: true,
+                                teacher: null,
+                                session: r,
+                                isPlatform: true
+                              })}
+                              className="rounded border border-amber-400/50 bg-amber-500/20 px-2 py-0.5 text-[10px] text-amber-200"
+                            >
+                              Pay now
+                            </button>
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                try {
+                                  await axios.post(
+                                    `/api/sessions/${r._id}/payment-done`,
+                                    {},
+                                    { headers: { Authorization: `Bearer ${token}` } }
+                                  );
+                                  const [reqRes, walletRes] = await Promise.all([
+                                    axios.get("/api/sessions/my-requests", { headers: { Authorization: `Bearer ${token}` } }),
+                                    axios.get("/api/transactions/wallet", { headers: { Authorization: `Bearer ${token}` } })
+                                  ]);
+                                  setMyRequests(reqRes.data.requests || []);
+                                  setWallet(walletRes.data);
+                                  showToast("Payment recorded.", "success");
+                                  try {
+                                    if (typeof window !== "undefined") {
+                                      window.dispatchEvent(new Event("sn:sessions:refresh"));
+                                      window.dispatchEvent(new Event("sn:wallet:refresh"));
+                                    }
+                                  } catch {}
+                                } catch (err) {
+                                  setError("Could not update payment status");
+                                  showToast(err.response?.data?.message || "Could not record payment", "error");
+                                }
+                              }}
+                              className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200"
+                            >
+                              Mark as paid
+                            </button>
+                          </div>
                         </div>
                       </div>
                     );
@@ -394,6 +415,7 @@ const LearnerRequestsTabs = ({
                     return (
                       <button
                         type="button"
+                        disabled={!canComplete}
                         onClick={() => {
                           if (canComplete) {
                             handleCompleteSession(

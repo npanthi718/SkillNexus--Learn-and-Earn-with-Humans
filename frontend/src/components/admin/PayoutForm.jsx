@@ -6,6 +6,7 @@ const PayoutForm = ({ transaction, authHeaders, onUpdated, currencyRates = [] })
   const [payoutAmount, setPayoutAmount] = useState(transaction?.payoutAmount || 0);
   const [overrideFeePercent, setOverrideFeePercent] = useState(transaction?.platformFeePercent || 0);
   const [note, setNote] = useState("");
+  const [error, setError] = useState("");
   const rateMap = useMemo(() => {
     const m = {};
     (currencyRates || []).forEach((r) => {
@@ -44,17 +45,25 @@ const PayoutForm = ({ transaction, authHeaders, onUpdated, currencyRates = [] })
     return Math.round((((exchangeRate - expectedRate) / expectedRate) * 100) * 100) / 100;
   }, [expectedRate, exchangeRate]);
   const save = async () => {
-    const { data } = await axios.patch(
-      `/api/admin/transactions/${transaction._id}/pay`,
-      {
-        exchangeRate: Number(exchangeRate) || undefined,
-        payoutAmount: Number(payoutAmount || computed) || 0,
-        overrideFeePercent: Number(overrideFeePercent),
-        note
-      },
-      { headers: authHeaders }
-    );
-    onUpdated && onUpdated(data.transaction);
+    setError("");
+    try {
+      const { data } = await axios.patch(
+        `/api/admin/transactions/${transaction._id}/pay`,
+        {
+          exchangeRate: Number(exchangeRate) || undefined,
+          payoutAmount: Number(payoutAmount || computed) || 0,
+          overrideFeePercent: Number(overrideFeePercent),
+          note
+        },
+        { headers: authHeaders }
+      );
+      onUpdated && onUpdated(data.transaction);
+      try {
+        if (typeof window !== "undefined") window.dispatchEvent(new Event("sn:notifications:refresh"));
+      } catch {}
+    } catch (e) {
+      setError(e?.response?.data?.message || "Failed to mark payout");
+    }
   };
   return (
     <div className="rounded-lg border border-white/10 bg:black/20 p-3 space-y-2">
@@ -121,6 +130,11 @@ const PayoutForm = ({ transaction, authHeaders, onUpdated, currencyRates = [] })
           Save payout
         </button>
       </div>
+      {error && (
+        <div className="text-[11px] text-red-300">
+          {error}
+        </div>
+      )}
       {expectedRate > 0 && (
         <div className={`text-[11px] ${Math.abs(diffPct) <= 5 ? "text-emerald-300" : Math.abs(diffPct) <= 12 ? "text-amber-300" : "text-red-400"}`}>
           Difference vs admin rate: {diffPct}% ({exchangeRate || "—"} actual vs {expectedRate} expected)
