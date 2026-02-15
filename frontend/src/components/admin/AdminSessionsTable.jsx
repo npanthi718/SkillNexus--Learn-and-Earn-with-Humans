@@ -1,5 +1,6 @@
 import React from "react";
 import AdminSessionRow from "./sessions/AdminSessionRow.jsx";
+import ResponsiveTableCards from "../shared/ResponsiveTableCards.jsx";
 
 export default function AdminSessionsTable({
   sessions,
@@ -8,6 +9,14 @@ export default function AdminSessionsTable({
   setSessionEditModal,
   handleDeleteSession,
 }) {
+  const data = (offersOnly ? sessions.filter((s) => s.kind === "Offer" || s.status === "Offer") : sessions);
+  const headers = [
+    { key: "skill", label: "Skill" },
+    { key: "learner", label: "Learner" },
+    { key: "teacher", label: "Teacher" },
+    { key: "status", label: "Status" },
+    { key: "date", label: "Date" }
+  ];
   return (
     <section className="glass-card p-4">
       <div className="mb-3 flex items-center justify-between">
@@ -20,24 +29,46 @@ export default function AdminSessionsTable({
           <span>Show Offers only</span>
         </label>
       </div>
-      <div className="max-h-[600px] overflow-auto text-xs">
-        <table className="w-full border-collapse text-left">
-          <thead className="sticky top-0 bg-nexus-900/95 text-[11px] text-white/60">
-            <tr>
-              <th className="border-b border-white/10 px-3 py-2">Skill</th>
-              <th className="border-b border-white/10 px-3 py-2">Learner</th>
-              <th className="border-b border-white/10 px-3 py-2">Teacher</th>
-              <th className="border-b border-white/10 px-3 py-2">Status</th>
-              <th className="border-b border-white/10 px-3 py-2">Date</th>
-              <th className="border-b border-white/10 px-3 py-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(offersOnly ? sessions.filter((s) => s.kind === "Offer" || s.status === "Offer") : sessions).map((s) => (
-              <AdminSessionRow key={s._id} s={s} setSessionEditModal={setSessionEditModal} handleDeleteSession={handleDeleteSession} />
-            ))}
-          </tbody>
-        </table>
+      <div className="text-xs">
+        <ResponsiveTableCards
+          title="Sessions"
+          headers={headers}
+          rows={data}
+          renderCell={(h, s) => {
+            if (h.key === "skill") return s.skillName;
+            if (h.key === "learner") return s.learnerId?.name || "Unknown";
+            if (h.key === "teacher") return s.teacherId?.name || "Unassigned";
+            if (h.key === "status") return (
+              <span className={`rounded-full px-2 py-0.5 text-[10px] ${
+                s.status === "Completed"
+                  ? "bg-emerald-500/20 text-emerald-200"
+                  : s.status === "Accepted"
+                  ? "bg-blue-500/20 text-blue-200"
+                  : "bg-yellow-500/20 text-yellow-200"
+              }`}>{s.status}</span>
+            );
+            if (h.key === "date") return new Date(s.createdAt).toLocaleDateString();
+            return "";
+          }}
+          renderActions={(s) => (
+            <>
+              <button
+                type="button"
+                onClick={() => setSessionEditModal({ open: true, session: s })}
+                className="rounded border border-nexus-400/50 px-2 py-0.5 text-[10px] text-nexus-200"
+              >
+                View / Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDeleteSession(s._id)}
+                className="rounded border border-red-400/50 px-2 py-0.5 text-[10px] text-red-300"
+              >
+                Delete
+              </button>
+            </>
+          )}
+        />
       </div>
     </section>
   );

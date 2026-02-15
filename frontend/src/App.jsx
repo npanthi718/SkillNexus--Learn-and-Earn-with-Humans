@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/shared/Navbar.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -60,16 +59,16 @@ const App = () => {
   const location = useLocation();
   
   useEffect(() => {
-    const ensureGoogleMeta = async () => {
-      try {
-        const { data } = await axios.get("/api/platform/payment-details");
-        const clientId = data?.googleClientId || "";
-        const meta = document.querySelector('meta[name="google-client-id"]');
-        if (meta && clientId && !clientId.includes("YOUR_GOOGLE_CLIENT_ID")) {
-          meta.setAttribute("content", clientId);
-        }
-      } catch {
-        // ignore
+    const ensureGoogleMeta = () => {
+      const envClientId =
+        (typeof import.meta !== "undefined" &&
+          import.meta.env &&
+          import.meta.env.VITE_GOOGLE_CLIENT_ID) ||
+        "";
+      const clientId = envClientId;
+      const meta = document.querySelector('meta[name="google-client-id"]');
+      if (meta && clientId && !clientId.includes("YOUR_GOOGLE_CLIENT_ID")) {
+        meta.setAttribute("content", clientId);
       }
     };
     ensureGoogleMeta();

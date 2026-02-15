@@ -80,7 +80,7 @@ const Navbar = ({ onRequireAuth }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <div className={`${mobileOpen ? "flex" : "hidden"} md:flex items-center gap-4 text-sm ml-2 md:ml-6`}>
+        <div className={`hidden md:flex items-center gap-4 text-sm ml-2 md:ml-6`}>
           <Link
             to="/"
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
@@ -92,7 +92,7 @@ const Navbar = ({ onRequireAuth }) => {
           </Link>
           <Link
             to="/teachers"
-            className={`flex items:center gap-1.5 rounded-lg px-3 py-1.5 transition ${
+            className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
               isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white"
             }`}
           >
@@ -102,7 +102,7 @@ const Navbar = ({ onRequireAuth }) => {
           <Link
             to="/users"
             className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 transition ${
-              isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text:white"
+              isLight ? "text-slate-700 hover:bg-slate-100 hover:text-slate-900" : "text-white/80 hover:bg-white/10 hover:text-white"
             }`}
           >
             <span>👥</span>
@@ -140,7 +140,7 @@ const Navbar = ({ onRequireAuth }) => {
                 <Link
                   to={`/profile/${currentUser._id}`}
                   className={`rounded-full border px-3 py-1 text-[11px] ${
-                    isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/15 text-white/80 hover:bg:white/10"
+                    isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/15 text-white/80 hover:bg-white/10"
                   }`}
                   title="View my public profile"
                 >
@@ -179,6 +179,107 @@ const Navbar = ({ onRequireAuth }) => {
           </button>
         </div>
       </nav>
+      {mobileOpen && (
+        <div
+          className={`md:hidden fixed inset-0 z-40 ${isLight ? "bg-white/95" : "bg-nexus-900/95"} pt-16`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation menu"
+        >
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                className={`rounded-lg p-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/80 hover:bg-white/10"}`}
+                aria-label="Close menu"
+                title="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="mt-2 grid gap-2 text-base">
+              <Link
+                to="/"
+                onClick={() => setMobileOpen(false)}
+                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+              >
+                🏠 Home
+              </Link>
+              <Link
+                to="/teachers"
+                onClick={() => setMobileOpen(false)}
+                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+              >
+                👨‍🏫 Teachers
+              </Link>
+              <Link
+                to="/users"
+                onClick={() => setMobileOpen(false)}
+                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+              >
+                👥 Users
+              </Link>
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+              >
+                📊 Dashboard
+              </Link>
+              {currentUser ? (
+                <>
+                  {currentUser.role === "Admin" && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setMobileOpen(false)}
+                      className="block rounded-lg px-3 py-2 border border-amber-400/40 text-amber-200 hover:bg-amber-500/10"
+                    >
+                      🛠️ Admin
+                    </Link>
+                  )}
+                  <Link
+                    to="/me/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                  >
+                    👤 {currentUser.name.split(" ")[0]}
+                  </Link>
+                  <Link
+                    to={`/profile/${currentUser._id}`}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block rounded-lg px-3 py-2 ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                  >
+                    View public profile
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => { handleLogout(); setMobileOpen(false); }}
+                    className={`block rounded-lg px-3 py-2 text-left ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => { goto("/dashboard"); setMobileOpen(false); }}
+                  className="glass-button bg-gradient-to-r from-nexus-500 to-purple-500 px-3 py-2 text-base font-medium shadow-lg shadow-nexus-500/30"
+                >
+                  Login / Signup
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className={`mt-1 rounded-lg px-3 py-2 text-left ${isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10"}`}
+              >
+                {isLight ? "🌙 Dark theme" : "☀️ Light theme"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

@@ -13,7 +13,7 @@ const OfferPreviewModal = ({ offerPreview, onCancel, onConfirm }) => {
           <div className="flex justify-between items-center"><span className="theme-muted">Teacher receives</span><span className="font-semibold">{offerPreview.payoutCur} {Number(offerPreview.teacherReceives).toLocaleString()}</span></div>
         </div>
         <div className="mt-3 flex justify-end gap-2">
-          <button type="button" onClick={onCancel} className="rounded border px-3 py-1 text-[11px] text-white/80 hover:bg:white/10">Cancel</button>
+          <button type="button" onClick={onCancel} className="rounded border px-3 py-1 text-[11px] text-white/80 hover:bg-white/10">Cancel</button>
           <button
             type="button"
             onClick={onConfirm}

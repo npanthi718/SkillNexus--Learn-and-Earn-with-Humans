@@ -87,7 +87,7 @@ const ImageUriInput = ({
           className={`rounded px-2 py-1.5 text-sm font-medium ${
             mode === "url"
               ? "bg-nexus-500/30 text-nexus-200 border border-nexus-400/50"
-              : isLight ? "border-slate-300 text-slate-600 hover:bg-slate-100" : "border border-white/20 text-white/60 hover:bg:white/5"
+              : isLight ? "border-slate-300 text-slate-600 hover:bg-slate-100" : "border border-white/20 text-white/60 hover:bg-white/5"
           }`}
         >
           Provide URL
@@ -98,7 +98,7 @@ const ImageUriInput = ({
           className={`rounded px-2 py-1.5 text-sm font-medium ${
             mode === "upload"
               ? "bg-nexus-500/30 text-nexus-200 border border-nexus-400/50"
-              : isLight ? "border-slate-300 text-slate-600 hover:bg-slate-100" : "border border-white/20 text-white/60 hover:bg:white/5"
+              : isLight ? "border-slate-300 text-slate-600 hover:bg-slate-100" : "border border-white/20 text-white/60 hover:bg-white/5"
           }`}
         >
           {uploadLabel}

@@ -89,17 +89,15 @@ const DashboardPage = () => {
         });
         setUser(authRes.data.user);
 
-        const [requestsRes, teachingRes, platformRes, walletRes, offersRes, notifRes] = await Promise.all([
+        const [requestsRes, teachingRes, walletRes, offersRes, notifRes] = await Promise.all([
           axios.get("/api/sessions/my-requests", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { requests: [] } })),
           axios.get("/api/sessions/my-teaching", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { sessions: [] } })),
-          axios.get("/api/platform/payment-details").catch(() => ({ data: {} })),
           axios.get("/api/transactions/wallet", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { asLearner: [], asTeacher: [] } })),
           axios.get("/api/sessions/offers").catch(() => ({ data: { offers: [] } })),
           axios.get("/api/notifications", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { notifications: [] } }))
         ]);
         setMyRequests(requestsRes.data.requests || []);
         setMyTeaching(teachingRes.data.sessions || []);
-        setPlatformPaymentDetails(platformRes.data);
         setWallet(walletRes.data);
         setPublicOffers(offersRes.data.offers || []);
         try {
@@ -107,7 +105,7 @@ const DashboardPage = () => {
           setCurrencies({
             currencyRates: curRes.data.currencyRates || [],
             countryCurrency: curRes.data.countryCurrency || [],
-            platformFeePercent: (platformRes.data.platformFeePercent ?? 10)
+            platformFeePercent: (curRes.data.platformFeePercent ?? 10)
           });
         } catch {}
         const frRes = await axios.get("/api/users/friend-requests", { headers: { Authorization: `Bearer ${token}` } }).catch(() => ({ data: { requests: [] } }));
@@ -125,6 +123,21 @@ const DashboardPage = () => {
 
     fetchUser();
   }, [navigate, token]);
+
+  const openPaymentDetails = async (next) => {
+    if (next?.isPlatform) {
+      try {
+        if (!platformPaymentDetails) {
+          const { data } = await axios.get("/api/platform/payment-details");
+          setPlatformPaymentDetails(data);
+        }
+      } catch {
+        showToast("Company payment details not available", "error");
+        return;
+      }
+    }
+    setPaymentDetailsModal({ open: true, teacher: next?.teacher || null, session: next?.session || null, isPlatform: !!next?.isPlatform });
+  };
 
   const handleToggle = async (desiredTeacherMode) => {
     if (!token) return;
@@ -395,7 +408,7 @@ const DashboardPage = () => {
               token={token}
               currencies={currencies}
               navigate={navigate}
-              setPaymentDetailsModal={setPaymentDetailsModal}
+              setPaymentDetailsModal={openPaymentDetails}
               setMyRequests={setMyRequests}
               setWallet={setWallet}
               showToast={showToast}

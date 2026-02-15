@@ -37,6 +37,7 @@ import AdminCurrencyPanel from "../components/admin/settings/AdminCurrencyPanel.
 import AdminNPRSummary from "../components/admin/earnings/AdminNPRSummary.jsx";
 import AdminEarningsTables from "../components/admin/earnings/AdminEarningsTables.jsx";
 import AdminExpendituresPanel from "../components/admin/earnings/AdminExpendituresPanel.jsx";
+import ResponsiveTableCards from "../components/shared/ResponsiveTableCards.jsx";
 
  
 
@@ -472,20 +473,16 @@ const AdminPage = () => {
                   onMinTrust={setMinTrustFilter}
                 />
                 <VisibilityMount placeholder={<Loader size="xs" />}>
-                <div className="max-h-[600px] overflow-auto text-xs">
-                  <table className="w-full border-collapse text-left">
-                  <thead className="sticky top-0 bg-nexus-900/95 text-[11px] text-white/60">
-                    <tr>
-                      <th className="border-b border-white/10 px-3 py-2">Name</th>
-                      <th className="border-b border-white/10 px-3 py-2">Email</th>
-                      <th className="border-b border-white/10 px-3 py-2">Role</th>
-                      <th className="border-b border-white/10 px-3 py-2">Verified</th>
-                      <th className="border-b border-white/10 px-3 py-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users
-                      .filter((u) => {
+                  <div className="text-xs">
+                    <ResponsiveTableCards
+                      title="Users"
+                      headers={[
+                        { key: "name", label: "Name" },
+                        { key: "email", label: "Email" },
+                        { key: "role", label: "Role" },
+                        { key: "verified", label: "Verified" }
+                      ]}
+                      rows={users.filter((u) => {
                         const q = userQuery.trim().toLowerCase();
                         if (q) {
                           const name = String(u.name || "").toLowerCase();
@@ -504,19 +501,56 @@ const AdminPage = () => {
                         const trust = Number(u.trustScore || 0);
                         if (trust < Number(minTrustFilter || 0)) return false;
                         return true;
-                      })
-                      .map((u) => (
-                        <AdminUserRow
-                          key={u._id}
-                          user={u}
-                          onLoadHistory={loadUserHistory}
-                          onChangeRole={handleChangeRole}
-                          onToggleVerify={handleToggleVerify}
-                        />
-                      ))}
-                  </tbody>
-                  </table>
-                </div>
+                      })}
+                      renderCell={(h, user) => {
+                        if (h.key === "name") {
+                          return (
+                            <div className="flex items-center gap-2">
+                              <Avatar src={user.profilePic} name={user.name} size="sm" />
+                              <button type="button" onClick={() => loadUserHistory(user._id)} className="font-medium text-nexus-200 hover:underline">
+                                {user.name}
+                              </button>
+                            </div>
+                          );
+                        }
+                        if (h.key === "email") return user.email;
+                        if (h.key === "role") {
+                          return (
+                            <select value={user.role} onChange={(e) => handleChangeRole(user._id, e.target.value)} className="rounded-md bg-black/40 px-2 py-1 text-[11px] outline-none">
+                              <option value="User">User</option>
+                              <option value="Admin">Admin</option>
+                            </select>
+                          );
+                        }
+                        if (h.key === "verified") {
+                          return (
+                            <div className="flex items-center gap-3 justify-end">
+                              <label className="inline-flex cursor-pointer items-center gap-2">
+                                <span className="text-[11px]">Teacher</span>
+                                <input type="checkbox" checked={Boolean(user.isTeacherVerified)} onChange={() => handleToggleVerify(user._id, "Teacher", Boolean(user.isTeacherVerified))} />
+                                <span className={`rounded-full px-2 py-0.5 text-[10px] ${user.isTeacherVerified ? "bg-emerald-500/20 text-emerald-200 border border-emerald-400/40" : "bg-red-500/20 text-red-200 border border-red-400/40"}`}>
+                                  {user.isTeacherVerified ? "Verified" : "Unverified"}
+                                </span>
+                              </label>
+                              <label className="inline-flex cursor-pointer items-center gap-2">
+                                <span className="text-[11px]">Learner</span>
+                                <input type="checkbox" checked={Boolean(user.isLearnerVerified)} onChange={() => handleToggleVerify(user._id, "Learner", Boolean(user.isLearnerVerified))} />
+                                <span className={`rounded-full px-2 py-0.5 text-[10px] ${user.isLearnerVerified ? "bg-emerald-500/20 text-emerald-200 border border-emerald-400/40" : "bg-red-500/20 text-red-200 border border-red-400/40"}`}>
+                                  {user.isLearnerVerified ? "Verified" : "Unverified"}
+                                </span>
+                              </label>
+                            </div>
+                          );
+                        }
+                        return "";
+                      }}
+                      renderActions={(user) => (
+                        <button type="button" onClick={() => loadUserHistory(user._id)} className="rounded-full border border-blue-400/50 bg-blue-500/20 px-2 py-0.5 text-[11px] text-blue-200 hover:bg-blue-500/30">
+                          View Details
+                        </button>
+                      )}
+                    />
+                  </div>
                 </VisibilityMount>
               </>
             )}
@@ -665,71 +699,64 @@ const AdminPage = () => {
 
             <div className="glass-card p-4 rounded-xl">
               <h2 className="mb-4 text-sm font-semibold">All payments · Who paid how much to whom</h2>
-              <div className="max-h-[500px] overflow-auto text-xs">
-                <table className="w-full border-collapse text-left">
-                  <thead className="sticky top-0 bg-nexus-900/95 text-[11px] text-white/60">
-                    <tr>
-                      <th className="border-b border-white/10 px-2 py-2">Learner</th>
-                      <th className="border-b border-white/10 px-2 py-2">Teacher</th>
-                      <th className="border-b border-white/10 px-2 py-2">Skill</th>
-                      <th className="border-b border-white/10 px-2 py-2">Amount paid</th>
-                      <th className="border-b border-white/10 px-2 py-2">Learner currency</th>
-                      <th className="border-b border-white/10 px-2 py-2">Fee %</th>
-                      <th className="border-b border-white/10 px-2 py-2">Platform fee</th>
-                      <th className="border-b border-white/10 px-2 py-2">To teacher</th>
-                      <th className="border-b border-white/10 px-2 py-2">Teacher currency</th>
-                      <th className="border-b border-white/10 px-2 py-2">Status</th>
-                      <th className="border-b border-white/10 px-2 py-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {transactions.map((t) => {
-                      const payer = String(t.payerCurrency || "USD").toUpperCase();
-                      const payout = String(t.payoutCurrency || "USD").toUpperCase();
-                      const buyNPR = (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === "NPR")?.buyToUSD ?? (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === "NPR")?.rateToUSD ?? 1;
-                      const sellPayout = (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === payout)?.sellToUSD ?? (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === payout)?.rateToUSD ?? 1;
-                      const rate = (typeof t.nprToPayoutRate === "number" && t.nprToPayoutRate > 0)
-                        ? t.nprToPayoutRate
-                        : (sellPayout ? (Number(buyNPR || 1) / Number(sellPayout || 1)) : 0);
-                      const effectivePayout = Math.round((((t.teacherAmountNPR || 0) * (rate || 0)) || 0) * 100) / 100;
-                      return (
-                      <tr
-                        key={t._id}
-                        className="hover:bg-white/5 border-b border-white/5 cursor-pointer"
-                        onClick={() => setSelectedTransactionDetail(t)}
+              <div className="text-xs">
+                <ResponsiveTableCards
+                  title="Payments"
+                  headers={[
+                    { key: "learner", label: "Learner" },
+                    { key: "teacher", label: "Teacher" },
+                    { key: "skill", label: "Skill" },
+                    { key: "amt", label: "Amount paid" },
+                    { key: "payerCur", label: "Learner currency" },
+                    { key: "feePct", label: "Fee %" },
+                    { key: "feeAmt", label: "Platform fee" },
+                    { key: "toTeacher", label: "To teacher" },
+                    { key: "payoutCur", label: "Teacher currency" },
+                    { key: "status", label: "Status" }
+                  ]}
+                  rows={transactions}
+                  renderCell={(h, t) => {
+                    const payer = String(t.payerCurrency || "USD").toUpperCase();
+                    const payout = String(t.payoutCurrency || "USD").toUpperCase();
+                    const buyNPR = (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === "NPR")?.buyToUSD ?? (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === "NPR")?.rateToUSD ?? 1;
+                    const sellPayout = (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === payout)?.sellToUSD ?? (platformConfig?.currencyRates || []).find((r) => String(r.code || "").toUpperCase() === payout)?.rateToUSD ?? 1;
+                    const rate = (typeof t.nprToPayoutRate === "number" && t.nprToPayoutRate > 0)
+                      ? t.nprToPayoutRate
+                      : (sellPayout ? (Number(buyNPR || 1) / Number(sellPayout || 1)) : 0);
+                    const effectivePayout = Math.round((((t.teacherAmountNPR || 0) * (rate || 0)) || 0) * 100) / 100;
+                    if (h.key === "learner") return t.learnerId?.name || "—";
+                    if (h.key === "teacher") return t.teacherId?.name || "—";
+                    if (h.key === "skill") return t.skillName;
+                    if (h.key === "amt") return `${payer} ${Number(t.amountPaid).toLocaleString()}`;
+                    if (h.key === "payerCur") return payer;
+                    if (h.key === "feePct") return `${t.platformFeePercent}%`;
+                    if (h.key === "feeAmt") return `NPR ${Number(t.platformFeeAmountNPR || 0).toLocaleString()}`;
+                    if (h.key === "toTeacher") return `${payout} ${Number(effectivePayout).toLocaleString()}`;
+                    if (h.key === "payoutCur") return payout;
+                    if (h.key === "status") {
+                      const cls = t.status === "paid_to_teacher" ? "status-paid" : t.status === "reverted_to_learner" ? "status-reverted" : t.status === "complaint_raised" ? "status-complaint" : "status-pending";
+                      const txt = t.status === "paid_to_teacher" ? "Paid to teacher" : t.status === "reverted_to_learner" ? "Reverted to learner" : t.status === "complaint_raised" ? "Complaint" : "Pending payout";
+                      return <span className={cls}>{txt}</span>;
+                    }
+                    return "";
+                  }}
+                  renderActions={(t) => (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedPayoutId(expandedPayoutId === t._id ? null : t._id)}
+                        className="rounded border border-nexus-400/50 px-2 py-0.5 text-[10px] text-nexus-200 mr-1"
                       >
-                        <td className="px-2 py-2">{t.learnerId?.name || "—"}</td>
-                        <td className="px-2 py-2">{t.teacherId?.name || "—"}</td>
-                        <td className="px-2 py-2">{t.skillName}</td>
-                        <td className="px-2 py-2">{payer} {Number(t.amountPaid).toLocaleString()}</td>
-                        <td className="px-2 py-2">{payer}</td>
-                        <td className="px-2 py-2">{t.platformFeePercent}%</td>
-                        <td className="px-2 py-2">NPR {Number(t.platformFeeAmountNPR || 0).toLocaleString()}</td>
-                        <td className="px-2 py-2 text-amber-200">{payout} {Number(effectivePayout).toLocaleString()}</td>
-                        <td className="px-2 py-2">{payout}</td>
-                        <td className="px-2 py-2">
-                          <span className={t.status === "paid_to_teacher" ? "status-paid" : t.status === "reverted_to_learner" ? "status-reverted" : t.status === "complaint_raised" ? "status-complaint" : "status-pending"}>
-                            {t.status === "paid_to_teacher" ? "Paid to teacher" : t.status === "reverted_to_learner" ? "Reverted to learner" : t.status === "complaint_raised" ? "Complaint" : "Pending payout"}
-                          </span>
-                        </td>
-                        <td className="px-2 py-2" onClick={(e) => e.stopPropagation()}>
-                          {t.status === "pending_payout" && (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => setExpandedPayoutId(expandedPayoutId === t._id ? null : t._id)}
-                                className="rounded border border-nexus-400/50 px-2 py-0.5 text-[10px] text-nexus-200 mr-1"
-                              >
-                                Teacher details
-                              </button>
-                              <button type="button" onClick={() => setSelectedTransactionDetail(t)} className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200">Mark paid</button>
-                            </>
-                          )}
-                        </td>
-                      </tr>
-                    )})}
-                  </tbody>
-                </table>
+                        Teacher details
+                      </button>
+                      {t.status === "pending_payout" && (
+                        <button type="button" onClick={() => setSelectedTransactionDetail(t)} className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200">
+                          Mark paid
+                        </button>
+                      )}
+                    </>
+                  )}
+                />
                 {expandedPayoutId && transactions.find((t) => t._id === expandedPayoutId)?.teacherId?.paymentDetails?.length > 0 && (
                   <div className="mt-4 p-4 rounded-lg border border-amber-500/30 bg-amber-500/10 text-[11px]">
                     <p className="font-medium text-amber-200 mb-2">Teacher payout details (for paying teacher)</p>
