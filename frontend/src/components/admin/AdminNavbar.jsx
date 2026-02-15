@@ -11,10 +11,12 @@ const AdminNavbar = () => {
   const [logoUrl, setLogoUrl] = useState("");
 
   useEffect(() => {
-    fetch("/api/platform/payment-details")
-      .then((r) => r.json())
-      .then((res) => setLogoUrl(res.logoUrl || ""))
-      .catch(() => setLogoUrl(""));
+    const envLogo =
+      (typeof import.meta !== "undefined" &&
+        import.meta.env &&
+        import.meta.env.VITE_LOGO_URL) ||
+      "";
+    setLogoUrl(envLogo || "");
   }, []);
 
   const handleLogout = () => {
@@ -41,7 +43,7 @@ const AdminNavbar = () => {
           </div>
         </Link>
 
-        <div className="flex items-center gap-2 text-xs sm:text-sm">
+        <div className="flex items-center gap-2 text-xs sm:text-sm flex-wrap w-full sm:w-auto mt-3 sm:mt-0">
           <Link
             to="/admin"
             className={`rounded-lg border px-3 py-1.5 ${

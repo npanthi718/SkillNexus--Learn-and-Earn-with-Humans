@@ -178,8 +178,11 @@ const AuthPage = () => {
               onClick={() => {
                 (async () => {
                   try {
-                    const cfg = await axios.get("/api/platform/payment-details");
-                    const clientId = cfg.data.googleClientId;
+                    const clientId =
+                      (typeof import.meta !== "undefined" &&
+                        import.meta.env &&
+                        import.meta.env.VITE_GOOGLE_CLIENT_ID) ||
+                      "";
                     if (!window.google || !clientId) {
                       setError("Google sign-in not configured");
                       return;

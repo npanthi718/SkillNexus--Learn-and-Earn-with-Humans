@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind base styles – injected at build time */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 
 html,
 body,
@@ -11,9 +13,12 @@ body,
 /* Dark mode (default) */
 html.dark body,
 body {
-  @apply font-inter bg-nexus-900 text-white;
+  font-family: "Inter", system-ui, sans-serif;
+  background-color: #0f172a; /* bg-nexus-900 */
+  color: #ffffff; /* text-white */
   background-image: radial-gradient(circle at top, rgba(148, 163, 255, 0.16), transparent 55%),
     radial-gradient(circle at bottom, rgba(236, 72, 153, 0.14), transparent 55%);
+  overflow-x: hidden;
 }
 
 /* Light mode - improved visibility and attractiveness */
@@ -31,8 +36,19 @@ html.light body::before {
   z-index: 0;
 }
 
+/* Visible text selection */
+::selection {
+  background: rgba(99, 102, 241, 0.35);
+  color: #ffffff;
+}
+html.light ::selection {
+  background: rgba(99, 102, 241, 0.25);
+  color: #0f172a;
+}
+
 html.dark .glass-card {
-  @apply bg-white/5 border-white/10;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 html.light .glass-card {
   background: rgba(255, 255, 255, 0.95);
@@ -41,11 +57,14 @@ html.light .glass-card {
   color: #0f172a;
 }
 .glass-card {
-  @apply backdrop-blur-xl rounded-2xl border;
+  backdrop-filter: blur(16px);
+  border-radius: 1rem;
+  border-width: 1px;
 }
 
 html.dark .glass-button {
-  @apply hover:border-white/40 hover:bg-white/10;
+  border-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 html.light .glass-button {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
@@ -57,7 +76,15 @@ html.light .glass-button:hover {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 .glass-button {
-  @apply glass-card px-4 py-2 flex items-center justify-center gap-2 transition;
+  backdrop-filter: blur(16px);
+  border-radius: 1rem;
+  border-width: 1px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-in-out;
 }
 
 /* Light mode - text and inputs */
@@ -75,13 +102,17 @@ html.light textarea::placeholder {
 
 /* Modal overlay and content - theme aware */
 .modal-overlay {
-  @apply bg-black/70;
+  background: rgba(0, 0, 0, 0.7);
 }
 html.light .modal-overlay {
   background: rgba(15, 23, 42, 0.5);
 }
 .modal-content {
-  @apply glass-card;
+  backdrop-filter: blur(16px);
+  border-radius: 1rem;
+  border-width: 1px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 html.light .modal-content {
   background: white;
@@ -98,13 +129,13 @@ html.light .theme-muted {
   color: #64748b;
 }
 .theme-primary {
-  @apply text-white;
+  color: white;
 }
 html.light .theme-primary {
   color: #0f172a;
 }
 .theme-accent {
-  @apply text-amber-200;
+  color: #fbbf24;
 }
 html.light .theme-accent {
   color: #b45309;
@@ -133,10 +164,40 @@ html.light .bg-black\/40 {
 }
 
 /* Theme-aware status badges - use in components */
-.status-paid { @apply rounded-full px-2 py-0.5 text-[10px] bg-emerald-500/20 text-emerald-200; }
-.status-pending { @apply rounded-full px-2 py-0.5 text-[10px] bg-amber-500/20 text-amber-200; }
-.status-reverted { @apply rounded-full px-2 py-0.5 text-[10px] bg-slate-500/20 text-slate-200; }
-.status-complaint { @apply rounded-full px-2 py-0.5 text-[10px] bg-red-500/20 text-red-200; }
+.status-paid {
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.625rem;
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #a7f3d0;
+}
+.status-pending {
+  border-radius: 9999px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  font-size: 0.625rem;
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+}
+.status-reverted {
+  border-radius: 9999px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+  font-size: 0.625rem;
+  background-color: rgba(100, 116, 139, 0.2);
+  color: #e2e8f0;
+}
+.status-complaint {
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.625rem;
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+}
 html.light .status-paid { background: rgba(16, 185, 129, 0.15); color: #047857; }
 html.light .status-pending { background: rgba(245, 158, 11, 0.2); color: #b45309; }
 html.light .status-reverted { background: rgba(100, 116, 139, 0.15); color: #475569; }
