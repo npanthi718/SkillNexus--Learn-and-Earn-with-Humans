@@ -180,7 +180,7 @@ const Navbar = ({ onRequireAuth }) => {
       </nav>
       {mobileOpen && (
         <div
-          className={`md:hidden fixed inset-0 z-40 ${isLight ? "bg-white/95" : "bg-nexus-900/95"} pt-16`}
+          className={`md:hidden fixed inset-0 z-40 ${isLight ? "bg-white/95" : "bg-nexus-900/95"} pt-16 overflow-y-auto`}
           role="dialog"
           aria-modal="true"
           aria-label="Mobile navigation menu"

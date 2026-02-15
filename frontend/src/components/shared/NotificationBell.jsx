@@ -39,9 +39,9 @@ const NotificationBell = ({ token, isLight }) => {
       for (const n of cleaned) {
         const id = String(n.relatedId || "");
         const t = String(n.type || "");
-        if (t.includes("accepted")) serverProcessed.set(id, "accepted");
-        else if (t.includes("rejected")) serverProcessed.set(id, "rejected");
-        else if (t.includes("unfriend") || t.includes("friend_removed")) serverProcessed.set(id, "unfriended");
+        if (t === "friend_request_accepted") serverProcessed.set(id, "accepted");
+        else if (t === "friend_request_rejected") serverProcessed.set(id, "rejected");
+        else if (t === "friend_removed" || t === "friend_unfriended") serverProcessed.set(id, "unfriended");
       }
       setNotifications((prev) => {
         const processedMap = new Map(
@@ -84,10 +84,12 @@ const NotificationBell = ({ token, isLight }) => {
     };
     let es;
     try {
-      if (typeof window !== "undefined" && token) {
+      const sseSupported = typeof localStorage !== "undefined" ? localStorage.getItem("sn_sse_supported") === "true" : false;
+      if (typeof window !== "undefined" && token && sseSupported) {
         es = new EventSource(`/api/notifications/stream?token=${encodeURIComponent(token)}`);
+        es.onopen = () => { try { localStorage.setItem("sn_sse_supported", "true"); } catch {} };
         es.onmessage = () => fetchNotifications();
-        es.onerror = () => { try { es.close(); } catch {} };
+        es.onerror = () => { try { localStorage.setItem("sn_sse_supported", "false"); es.close(); } catch {} };
       }
     } catch {}
     if (typeof window !== "undefined") {
