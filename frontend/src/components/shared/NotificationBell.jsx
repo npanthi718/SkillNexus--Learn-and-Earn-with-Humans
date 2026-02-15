@@ -24,7 +24,21 @@ const NotificationBell = ({ token, isLight }) => {
         seen.add(key);
         dedup.push(n);
       }
-      setNotifications(dedup);
+      setNotifications((prev) => {
+        const processedMap = new Map(
+          (prev || [])
+            .filter((p) => p.type === "friend_request" && p.processed)
+            .map((p) => [String(p.relatedId || ""), p.processed])
+        );
+        const merged = dedup.map((n) => {
+          if (n.type === "friend_request") {
+            const p = processedMap.get(String(n.relatedId || ""));
+            if (p) return { ...n, processed: p, read: true };
+          }
+          return n;
+        });
+        return merged.filter((n) => !(n.type !== "friend_request" && processedMap.has(String(n.relatedId || ""))));
+      });
       setUnreadCount(data.unreadCount || 0);
     } catch (err) {}
   };
@@ -71,7 +85,13 @@ const NotificationBell = ({ token, isLight }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (notifId) markRead(notifId);
-      setNotifications((prev) => prev.map((n) => n._id === notifId ? { ...n, read: true } : n));
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n._id === notifId
+            ? { ...n, read: true, processed: "accepted", title: "Friend request accepted", body: "You are friends now." }
+            : n
+        )
+      );
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("sn:notifications:refresh"));
       }
@@ -86,7 +106,13 @@ const NotificationBell = ({ token, isLight }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (notifId) markRead(notifId);
-      setNotifications((prev) => prev.map((n) => n._id === notifId ? { ...n, read: true } : n));
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n._id === notifId
+            ? { ...n, read: true, processed: "rejected", title: "Friend request rejected", body: "Request declined." }
+            : n
+        )
+      );
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("sn:notifications:refresh"));
       }
@@ -159,11 +185,20 @@ const NotificationBell = ({ token, isLight }) => {
                         {n.status}
                       </span>
                     )}
-                    {n.type === "friend_request" && (
+                    {n.type === "friend_request" && !n.processed && (
                       <div className="mt-2 flex gap-2">
                         <button type="button" onClick={(e) => { e.stopPropagation(); acceptFriend(n.relatedId, n._id); }} className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200">Accept</button>
                         <button type="button" onClick={(e) => { e.stopPropagation(); rejectFriend(n.relatedId, n._id); }} className="rounded border border-red-400/50 bg-red-500/20 px-2 py-0.5 text-[10px] text-red-200">Reject</button>
                       </div>
+                    )}
+                    {n.type === "friend_request" && n.processed && (
+                      <span className={`mt-2 inline-block rounded-full border px-2 py-0.5 text-[10px] ${
+                        n.processed === "accepted"
+                          ? (isLight ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-700" : "border-emerald-400/50 bg-emerald-500/20 text-emerald-200")
+                          : (isLight ? "border-red-400/50 bg-red-500/15 text-red-700" : "border-red-400/50 bg-red-500/20 text-red-200")
+                      }`}>
+                        {n.processed === "accepted" ? "Accepted" : "Rejected"}
+                      </span>
                     )}
                   </div>
                 ))

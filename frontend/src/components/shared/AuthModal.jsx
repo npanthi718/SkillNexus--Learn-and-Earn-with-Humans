@@ -48,7 +48,7 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="glass-card w-[90%] max-w-sm p-5 sm:p-7">
+      <div className="glass-card w-[92%] max-w-sm max-h-[85vh] overflow-auto p-5 sm:p-7">
         <div className="flex items-center justify-between text-sm">
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-white/60">

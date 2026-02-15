@@ -263,7 +263,7 @@ const Navbar = ({ onRequireAuth }) => {
                 <button
                   type="button"
                   onClick={() => { goto("/dashboard"); setMobileOpen(false); }}
-                  className="glass-button bg-gradient-to-r from-nexus-500 to-purple-500 px-3 py-2 text-base font-medium shadow-lg shadow-nexus-500/30"
+                  className="glass-button bg-gradient-to-r from-nexus-500 to-purple-500 px-3 py-2 text-base font-semibold shadow-lg shadow-nexus-500/30 text-white"
                 >
                   Login / Signup
                 </button>

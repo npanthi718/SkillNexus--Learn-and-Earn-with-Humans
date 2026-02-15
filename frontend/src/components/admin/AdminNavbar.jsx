@@ -111,8 +111,8 @@ const AdminNavbar = () => {
         </div>
       </nav>
       {menuOpen && (
-        <div className="fixed inset-0 z-40 sm:hidden" onClick={() => setMenuOpen(false)}>
-          <div className={`absolute top-0 right-0 h-full w-64 p-4 border-l ${isLight ? "bg-white border-amber-400/50" : "bg-nexus-900/95 border-amber-500/30"}`} onClick={(e) => e.stopPropagation()}>
+        <div className={`fixed inset-0 z-40 sm:hidden ${isLight ? "bg-slate-900/30" : "bg-black/50"} backdrop-blur-sm`} onClick={() => setMenuOpen(false)}>
+          <div className={`absolute top-0 right-0 h-full w-64 p-4 border-l ${isLight ? "bg-white border-amber-400/50" : "bg-nexus-900 border-amber-500/30"}`} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold">Admin Menu</p>
               <button type="button" onClick={() => setMenuOpen(false)} className="rounded-full p-2">✕</button>
