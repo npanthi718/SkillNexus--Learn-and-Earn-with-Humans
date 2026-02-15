@@ -33,7 +33,7 @@ const AdminNavbar = () => {
         className={`rounded-lg border px-3 py-1.5 ${
           location.pathname === "/admin" || location.pathname === "/admin/"
             ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
-            : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+            : isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"
         }`}
       >
         Dashboard
@@ -41,27 +41,27 @@ const AdminNavbar = () => {
       <Link to="/admin/users" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/users")
           ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
-          : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+          : isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"
       }`}>Users</Link>
       <Link to="/admin/sessions" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/sessions")
           ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
-          : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+          : isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"
       }`}>Sessions</Link>
       <Link to="/admin/messages" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/messages")
           ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
-          : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+          : isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"
       }`}>Messages</Link>
       <Link to="/admin/reviews" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/reviews")
           ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
-          : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+          : isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"
       }`}>Reviews</Link>
       <Link to="/admin/payments" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/payments")
           ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
-          : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
+          : isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"
       }`}>Payments</Link>
       <Link to="/admin/earnings" onClick={() => setMenuOpen(false)} className={`rounded-lg border px-3 py-1.5 ${
         location.pathname.includes("/admin/earnings")
@@ -73,8 +73,8 @@ const AdminNavbar = () => {
           ? "bg-gradient-to-r from-nexus-500 to-purple-500 text-white border-transparent"
           : isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"
       }`}>Settings</Link>
-      <button type="button" onClick={toggleTheme} className={`rounded-lg p-2 border ${isLight ? "border-slate-300 hover:bg-slate-100" : "border-white/20 bg-white/5 hover:bg-white/10"}`} title={theme === "dark" ? "Light mode" : "Dark mode"}>{theme === "dark" ? "☀️" : "🌙"}</button>
-      <button type="button" onClick={() => { setMenuOpen(false); navigate("/"); }} className={`rounded-lg border px-3 py-1.5 ${isLight ? "border-slate-300 text-slate-700 hover:bg-slate-100" : "border-white/20 bg-white/5 text-white/80 hover:bg-white/10"}`}>View Site</button>
+      <button type="button" onClick={toggleTheme} className={`rounded-lg p-2 border ${isLight ? "border-slate-300 hover:bg-slate-100" : "border-white/20 bg-nexus-800 hover:bg-nexus-700"}`} title={theme === "dark" ? "Light mode" : "Dark mode"}>{theme === "dark" ? "☀️" : "🌙"}</button>
+      <button type="button" onClick={() => { setMenuOpen(false); navigate("/"); }} className={`rounded-lg border px-3 py-1.5 ${isLight ? "border-slate-300 text-slate-700 bg-white hover:bg-slate-100" : "border-white/20 bg-nexus-800 text-white/90 hover:bg-nexus-700"}`}>View Site</button>
       <button type="button" onClick={() => { setMenuOpen(false); handleLogout(); }} className={`rounded-lg border px-3 py-1.5 ${isLight ? "border-red-300 bg-red-50 text-red-700 hover:bg-red-100" : "border-red-400/50 bg-red-500/20 text-red-200 hover:bg-red-500/30"}`}>Logout</button>
     </>
   );

@@ -21,7 +21,7 @@ const Navbar = ({ onRequireAuth }) => {
     const active = location.pathname === path || (path !== "/" && location.pathname.startsWith(path));
     const base = isLight ? "text-slate-700 hover:bg-slate-100" : "text-white/90 hover:bg-white/10";
     const selected = "bg-gradient-to-r from-nexus-500 to-purple-500 text-white";
-    return `block rounded-lg px-3 py-2 ${active ? selected : base}`;
+    return `block w-full rounded-lg px-3 py-2 ${active ? selected : base}`;
   };
   const goto = (path) => {
     const token = typeof window !== "undefined" ? localStorage.getItem("sn_token") : null;
@@ -263,7 +263,7 @@ const Navbar = ({ onRequireAuth }) => {
                 <button
                   type="button"
                   onClick={() => { goto("/dashboard"); setMobileOpen(false); }}
-                  className="glass-button bg-gradient-to-r from-nexus-500 to-purple-500 px-3 py-2 text-base font-semibold shadow-lg shadow-nexus-500/30 text-white"
+                  className="glass-button w-full bg-gradient-to-r from-nexus-500 to-purple-500 px-3 py-2 text-base font-semibold shadow-lg shadow-nexus-500/30 text-white text-center"
                 >
                   Login / Signup
                 </button>

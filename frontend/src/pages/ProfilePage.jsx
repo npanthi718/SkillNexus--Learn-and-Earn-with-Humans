@@ -53,6 +53,7 @@ const ProfileFriendActions = ({ userId }) => {
       await axios.post(`/api/users/friends/${userId}/cancel`, {}, { headers: { Authorization: `Bearer ${token}` } });
       setStatus("none");
       if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("sn:friend_request:cancel", { detail: { otherId: userId } }));
         window.dispatchEvent(new Event("sn:notifications:refresh"));
       }
       showToast("Request canceled", "success");

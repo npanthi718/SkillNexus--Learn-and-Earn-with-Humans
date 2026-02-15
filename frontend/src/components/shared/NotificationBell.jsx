@@ -7,6 +7,7 @@ const NotificationBell = ({ token, isLight }) => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [open, setOpen] = useState(false);
+  const [busyId, setBusyId] = useState(null);
   const { showToast } = useToast();
 
   const fetchNotifications = async () => {
@@ -24,33 +25,87 @@ const NotificationBell = ({ token, isLight }) => {
         seen.add(key);
         dedup.push(n);
       }
+      const canceledRelated = new Set(
+        dedup
+          .filter((n) => n.type === "friend_request_canceled")
+          .map((n) => String(n.relatedId || ""))
+      );
+      const cleaned = dedup.filter((n) => {
+        const id = String(n.relatedId || "");
+        if (n.type === "friend_request" && canceledRelated.has(id)) return false;
+        return true;
+      });
+      const serverProcessed = new Map();
+      for (const n of cleaned) {
+        const id = String(n.relatedId || "");
+        const t = String(n.type || "");
+        if (t.includes("accepted")) serverProcessed.set(id, "accepted");
+        else if (t.includes("rejected")) serverProcessed.set(id, "rejected");
+        else if (t.includes("unfriend") || t.includes("friend_removed")) serverProcessed.set(id, "unfriended");
+      }
       setNotifications((prev) => {
         const processedMap = new Map(
           (prev || [])
             .filter((p) => p.type === "friend_request" && p.processed)
             .map((p) => [String(p.relatedId || ""), p.processed])
         );
-        const merged = dedup.map((n) => {
+        const merged = cleaned.map((n) => {
           if (n.type === "friend_request") {
-            const p = processedMap.get(String(n.relatedId || ""));
+            const id = String(n.relatedId || "");
+            const p = serverProcessed.get(id) || processedMap.get(id);
             if (p) return { ...n, processed: p, read: true };
           }
           return n;
         });
-        return merged.filter((n) => !(n.type !== "friend_request" && processedMap.has(String(n.relatedId || ""))));
+        const final = merged.filter((n) => {
+          const id = String(n.relatedId || "");
+          if (n.type !== "friend_request" && (processedMap.has(id) || serverProcessed.has(id))) return false;
+          return true;
+        });
+        return final;
       });
-      setUnreadCount(data.unreadCount || 0);
+      setUnreadCount(
+        (cleaned.filter((n) => !n.read).length) || 0
+      );
     } catch (err) {}
   };
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000);
-    const handler = () => fetchNotifications();
+    const interval = setInterval(fetchNotifications, 10000);
+    const refreshHandler = () => fetchNotifications();
+    const focusHandler = () => fetchNotifications();
+    const visibilityHandler = () => { if (!document.hidden) fetchNotifications(); };
+    const cancelHandler = (e) => {
+      const otherId = e?.detail?.otherId;
+      if (!otherId) return;
+      setNotifications((prev) => prev.filter((n) => !(n.type === "friend_request" && String(n.relatedId || "") === String(otherId))));
+      setUnreadCount((c) => Math.max(0, c - 1));
+    };
+    let es;
+    try {
+      if (typeof window !== "undefined" && token) {
+        es = new EventSource(`/api/notifications/stream?token=${encodeURIComponent(token)}`);
+        es.onmessage = () => fetchNotifications();
+        es.onerror = () => { try { es.close(); } catch {} };
+      }
+    } catch {}
     if (typeof window !== "undefined") {
-      window.addEventListener("sn:notifications:refresh", handler);
+      window.addEventListener("sn:notifications:refresh", refreshHandler);
+      window.addEventListener("sn:friend_request:cancel", cancelHandler);
+      window.addEventListener("focus", focusHandler);
+      document.addEventListener("visibilitychange", visibilityHandler);
     }
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      try { es && es.close(); } catch {}
+      if (typeof window !== "undefined") {
+        window.removeEventListener("sn:notifications:refresh", refreshHandler);
+        window.removeEventListener("sn:friend_request:cancel", cancelHandler);
+        window.removeEventListener("focus", focusHandler);
+        document.removeEventListener("visibilitychange", visibilityHandler);
+      }
+    };
   }, [token]);
 
   const markRead = async (id) => {
@@ -81,6 +136,7 @@ const NotificationBell = ({ token, isLight }) => {
   };
   const acceptFriend = async (otherId, notifId) => {
     try {
+      setBusyId(notifId);
       await axios.post(`/api/users/friends/${otherId}/accept`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -99,9 +155,13 @@ const NotificationBell = ({ token, isLight }) => {
     } catch (err) {
       showToast(err.response?.data?.message || "Could not accept request", "error");
     }
+    finally {
+      setBusyId(null);
+    }
   };
   const rejectFriend = async (otherId, notifId) => {
     try {
+      setBusyId(notifId);
       await axios.post(`/api/users/friends/${otherId}/reject`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -120,6 +180,9 @@ const NotificationBell = ({ token, isLight }) => {
     } catch (err) {
       showToast(err.response?.data?.message || "Could not reject request", "error");
     }
+    finally {
+      setBusyId(null);
+    }
   };
 
   if (!token) return null;
@@ -128,7 +191,17 @@ const NotificationBell = ({ token, isLight }) => {
     <div className="relative">
       <button
         type="button"
-        onClick={() => { setOpen((o) => !o); if (!open) fetchNotifications(); }}
+        onClick={() => {
+          setOpen((o) => !o);
+          if (!open) {
+            fetchNotifications();
+            const fast = setInterval(fetchNotifications, 3000);
+            const stop = () => { clearInterval(fast); window.removeEventListener("sn:notifications:panel-close", stop); };
+            window.addEventListener("sn:notifications:panel-close", stop);
+          } else {
+            window.dispatchEvent(new Event("sn:notifications:panel-close"));
+          }
+        }}
         className={`relative rounded-full p-2 border ${
           isLight ? "border-slate-300 hover:bg-slate-100" : "border-white/15 hover:bg-white/10"
         }`}
@@ -187,17 +260,19 @@ const NotificationBell = ({ token, isLight }) => {
                     )}
                     {n.type === "friend_request" && !n.processed && (
                       <div className="mt-2 flex gap-2">
-                        <button type="button" onClick={(e) => { e.stopPropagation(); acceptFriend(n.relatedId, n._id); }} className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200">Accept</button>
-                        <button type="button" onClick={(e) => { e.stopPropagation(); rejectFriend(n.relatedId, n._id); }} className="rounded border border-red-400/50 bg-red-500/20 px-2 py-0.5 text-[10px] text-red-200">Reject</button>
+                        <button type="button" disabled={busyId === n._id} onClick={(e) => { e.stopPropagation(); acceptFriend(n.relatedId, n._id); }} className="rounded border border-emerald-400/50 bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200 disabled:opacity-60">Accept</button>
+                        <button type="button" disabled={busyId === n._id} onClick={(e) => { e.stopPropagation(); rejectFriend(n.relatedId, n._id); }} className="rounded border border-red-400/50 bg-red-500/20 px-2 py-0.5 text-[10px] text-red-200 disabled:opacity-60">Reject</button>
                       </div>
                     )}
                     {n.type === "friend_request" && n.processed && (
                       <span className={`mt-2 inline-block rounded-full border px-2 py-0.5 text-[10px] ${
                         n.processed === "accepted"
                           ? (isLight ? "border-emerald-400/50 bg-emerald-500/15 text-emerald-700" : "border-emerald-400/50 bg-emerald-500/20 text-emerald-200")
-                          : (isLight ? "border-red-400/50 bg-red-500/15 text-red-700" : "border-red-400/50 bg-red-500/20 text-red-200")
+                          : n.processed === "rejected"
+                            ? (isLight ? "border-red-400/50 bg-red-500/15 text-red-700" : "border-red-400/50 bg-red-500/20 text-red-200")
+                            : (isLight ? "border-slate-400/50 bg-slate-500/15 text-slate-700" : "border-slate-400/50 bg-slate-500/20 text-slate-200")
                       }`}>
-                        {n.processed === "accepted" ? "Accepted" : "Rejected"}
+                        {n.processed === "accepted" ? "Accepted" : n.processed === "rejected" ? "Rejected" : "Unfriended"}
                       </span>
                     )}
                   </div>
