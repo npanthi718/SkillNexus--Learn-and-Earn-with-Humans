@@ -14,7 +14,10 @@ build/
 .cache/
 
 # Env & secrets
+.env
+.env.*
 backend/.env
+frontend/.env
 *.pem
 *.key
 

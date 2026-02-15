@@ -2,6 +2,7 @@ import express from "express";
 import { User } from "../models/User.js";
 import { authRequired } from "../middleware/authMiddleware.js";
 import { createNotification } from "../utils/createNotification.js";
+import { Notification } from "../models/Notification.js";
 
 const router = express.Router();
 
