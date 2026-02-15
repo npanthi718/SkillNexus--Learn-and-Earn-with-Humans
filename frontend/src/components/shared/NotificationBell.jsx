@@ -39,9 +39,15 @@ const NotificationBell = ({ token, isLight }) => {
       for (const n of cleaned) {
         const id = String(n.relatedId || "");
         const t = String(n.type || "");
-        if (t === "friend_request_accepted") serverProcessed.set(id, "accepted");
-        else if (t === "friend_request_rejected") serverProcessed.set(id, "rejected");
-        else if (t === "friend_removed" || t === "friend_unfriended") serverProcessed.set(id, "unfriended");
+        const title = String(n.title || "");
+        const body = String(n.body || "");
+        if (t === "friend_request_accepted" || (/friend request/i.test(title) && /accepted/i.test(title + " " + body))) {
+          serverProcessed.set(id, "accepted");
+        } else if (t === "friend_request_rejected" || (/friend request/i.test(title) && /(rejected|declined)/i.test(title + " " + body))) {
+          serverProcessed.set(id, "rejected");
+        } else if (t === "friend_removed" || t === "friend_unfriended" || /unfriend/i.test(title + " " + body)) {
+          serverProcessed.set(id, "unfriended");
+        }
       }
       setNotifications((prev) => {
         const processedMap = new Map(
@@ -82,16 +88,7 @@ const NotificationBell = ({ token, isLight }) => {
       setNotifications((prev) => prev.filter((n) => !(n.type === "friend_request" && String(n.relatedId || "") === String(otherId))));
       setUnreadCount((c) => Math.max(0, c - 1));
     };
-    let es;
-    try {
-      const sseSupported = typeof localStorage !== "undefined" ? localStorage.getItem("sn_sse_supported") === "true" : false;
-      if (typeof window !== "undefined" && token && sseSupported) {
-        es = new EventSource(`/api/notifications/stream?token=${encodeURIComponent(token)}`);
-        es.onopen = () => { try { localStorage.setItem("sn_sse_supported", "true"); } catch {} };
-        es.onmessage = () => fetchNotifications();
-        es.onerror = () => { try { localStorage.setItem("sn_sse_supported", "false"); es.close(); } catch {} };
-      }
-    } catch {}
+    let es = null;
     if (typeof window !== "undefined") {
       window.addEventListener("sn:notifications:refresh", refreshHandler);
       window.addEventListener("sn:friend_request:cancel", cancelHandler);

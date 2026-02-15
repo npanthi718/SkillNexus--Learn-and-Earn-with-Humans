@@ -185,7 +185,7 @@ const Navbar = ({ onRequireAuth }) => {
           aria-modal="true"
           aria-label="Mobile navigation menu"
         >
-          <div className="mx-auto max-w-7xl px-4">
+          <div className="w-full px-3 mobile-nav-container">
             <div className="flex items-center justify-end">
               <button
                 type="button"
